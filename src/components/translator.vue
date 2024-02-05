@@ -2,6 +2,7 @@
   <div class="translator">
     <p>This is the translator component</p>
     <button
+      class="btn btn-primary"
       @click="testFunc">
       Translate some text!
     </button>
@@ -25,7 +26,7 @@ export default {
 </script>
 
 <style scoped>
-div {
-  background-color: #d5efff;
+.translator {
+  background-color: #cff1ff;
 }
 </style>
