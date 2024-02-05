@@ -4,12 +4,12 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/scalable-logo.svg"/>
+    <img @click="clickLogo" alt="Vue logo" class="logo" src="@/assets/scalable-logo.svg"/>
     <div class="wrapper">
       <nav>
         <RouterLink to="/" class="nav-link">Home</RouterLink>
-        <RouterLink to="/signIn" class="nav-link">Sign in</RouterLink>
-        <button v-if="username" @click="signUserOut">Sign out {{ username }}</button>
+        <RouterLink v-if="!username" to="/signIn" class="nav-link">Sign in</RouterLink>
+        <button v-if="username" type="button" class="btn btn-secondary btn-sm" @click="signUserOut" style="margin-left: auto;">Sign Out {{ username }}</button>
       </nav>
     </div>
   </header>
@@ -34,19 +34,26 @@ export default {
     signUserOut() {
       signCurrentUserOut();
       this.$router.push('/signIn');
+    },
+    clickLogo() {
+      this.$router.push('/');
     }
   }
 }
 </script>
 
 <style scoped>
-/* changes style of main 'wrapper' view */
+nav {
+  display: flex;
+}
 
 .nav-link {
   padding-right: 1rem;
+  text-decoration: underline;
 }
 
 .logo {
+  cursor: pointer;
   display: block;
   margin: 0 auto 2rem;
   width: 150px;

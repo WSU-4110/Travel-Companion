@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <p>This is the homepage</p>
     <h3 v-if="username">Welcome {{ username }}!</h3>
 
     <!-- for now the translator is here, ideally we will -->
