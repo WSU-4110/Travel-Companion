@@ -10,6 +10,7 @@
 
 <script>
 import { translateFromText } from '@/api/translator';
+
 export default {
   data () {
     return {
