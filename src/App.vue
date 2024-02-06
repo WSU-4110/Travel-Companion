@@ -13,8 +13,11 @@ import { RouterLink, RouterView } from 'vue-router'
       </nav>
     </div>
   </header>
-
-  <RouterView />
+  <div v-if="alertStatus" class="alert alert-dismissible fade show" :class="alertStatus" role="alert">
+    {{ alertMessage }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="dismissAlert"></button>
+  </div>
+<RouterView />
 </template>
 
 <script>
@@ -22,6 +25,12 @@ import { getUserAccount } from './api/userVerification';
 import { signCurrentUserOut } from './api/userVerification';
 
 export default {
+  data () {
+    return {
+      alertStatus: null,
+      alertMessage: ""
+    }
+  },
   created () {
     this.$store.commit('setUsername', getUserAccount());
   },
@@ -33,10 +42,16 @@ export default {
   methods: {
     signUserOut() {
       signCurrentUserOut();
+      this.alertMessage = "Successfully Signed Out";
+      this.alertStatus = 'alert-success';
       this.$router.push('/signIn');
     },
     clickLogo() {
       this.$router.push('/');
+    },
+    dismissAlert() {
+      this.alertMessage = "";
+      this.alertStatus = null;
     }
   }
 }
