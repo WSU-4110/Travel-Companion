@@ -30,7 +30,7 @@
         <label for="floatingInput">Username</label>
       </div>
       <div class="form-floating mb-2 w-50">
-        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" v-model="email">
+        <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" v-model="email">
         <label for="floatingInput">Email address</label>
       </div>
       <div class="form-floating mb-2 w-50">
@@ -50,8 +50,7 @@
 </template>
 
 <script>
-import { createNewUser } from '@/api/userVerification';
-import { verifyCredentials } from '@/api/userVerification';
+import { createNewUser, verifyCredentials } from '@/api/userVerification';
 
 export default {
   data () {

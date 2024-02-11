@@ -1,17 +1,14 @@
 <template>
-  <div class="translator">
-    <p>This is the translator component</p>
+  <div class="trip-manager">
+    <p>This is the trip manager</p>
     <button
       class="btn btn-primary"
-      @click="testFunc">
-      Translate some text!
-    </button>
-    <button
-      @click="testFunc2">
+      @click="saveTrip">
       Test putting item
     </button>
     <button
-      @click="getTest">
+      class="btn btn-primary"
+      @click="getTrips">
       Test getting items
     </button>
     <div v-if="allTrips">
@@ -29,14 +26,13 @@
 </template>
 
 <script>
-import { translateFromText } from '@/api/translator';
 import { getAllTrips, saveTrip } from '@/api/databaseManager';
 
 export default {
   data () {
     return {
       allTrips: null,
-      currentTrip: null
+      currentTrip: {}
     }
   },
   computed: {
@@ -49,17 +45,19 @@ export default {
     }
   },
   methods: {
-    testFunc() {
-      alert(translateFromText("this doesn't work yet!"));
-    },
-    testFunc2() {
-      this.currentTrip.tripName = "trip" + Math.floor(Math.random() * 16);
-      saveTrip(this.currentTrip);
-    },
-    async getTest() {
+    async getTrips() {
       this.allTrips = await getAllTrips();
+      if (!this.allTrips) {
+        console.log("no trips to fetch");
+        return;
+      }
       this.setCurrentTrip(this.allTrips[0]);
       console.log(this.allTrips);
+    },
+    saveTrip() {
+      // tempporary just to test fucntionality
+      this.currentTrip.tripName = "trip" + Math.floor(Math.random() * 16);
+      saveTrip(this.currentTrip);
     },
     setCurrentTrip(newTrip) {
       this.currentTrip = newTrip;
@@ -69,7 +67,7 @@ export default {
 </script>
 
 <style scoped>
-.translator {
-  background-color: #cff1ff;
+.dropdown-item {
+  cursor:pointer;
 }
 </style>

@@ -7,8 +7,9 @@ import { RouterLink, RouterView } from 'vue-router'
     <img @click="clickLogo" alt="Vue logo" class="logo" src="@/assets/scalable-logo.svg"/>
     <div class="wrapper">
       <nav>
-        <RouterLink to="/" class="nav-link">Home</RouterLink>
+        <RouterLink v-if="username" to="/" class="nav-link">Home</RouterLink>
         <RouterLink v-if="!username" to="/signIn" class="nav-link">Sign in</RouterLink>
+        <RouterLink v-if="username" to="/tripManager" class="nav-link">Manage Trips</RouterLink>
         <button v-if="username" type="button" class="btn btn-secondary btn-sm" @click="signUserOut" style="margin-left: auto;">Sign Out {{ username }}</button>
       </nav>
     </div>
