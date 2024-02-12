@@ -6,31 +6,11 @@
       @click="testFunc">
       Translate some text!
     </button>
-    <button
-      @click="testFunc2">
-      Test putting item
-    </button>
-    <button
-      @click="getTest">
-      Test getting items
-    </button>
-    <div v-if="allTrips">
-      <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          {{ currentTrip.tripName }}
-        </button>
-        <ul class="dropdown-menu">
-          <li v-for="trip in allTrips"><a v-if="trip !== currentTrip" class="dropdown-item" @click="setCurrentTrip(trip)">{{ trip.tripName }}</a></li>
-        </ul>
-      </div>
-      <p>Timestamp: {{ getTripTime }}</p>
-    </div>
   </div>
 </template>
 
 <script>
 import { translateFromText } from '@/api/translator';
-import { getAllTrips, saveTrip } from '@/api/databaseManager';
 
 export default {
   data () {
@@ -39,30 +19,9 @@ export default {
       currentTrip: null
     }
   },
-  computed: {
-    getTripTime() {
-      if (!this.currentTrip) {
-        return;
-      }
-
-      return new Date(this.currentTrip.timestamp).toLocaleString();
-    }
-  },
   methods: {
     testFunc() {
       alert(translateFromText("this doesn't work yet!"));
-    },
-    testFunc2() {
-      this.currentTrip.tripName = "trip" + Math.floor(Math.random() * 16);
-      saveTrip(this.currentTrip);
-    },
-    async getTest() {
-      this.allTrips = await getAllTrips();
-      this.setCurrentTrip(this.allTrips[0]);
-      console.log(this.allTrips);
-    },
-    setCurrentTrip(newTrip) {
-      this.currentTrip = newTrip;
     }
   }
 }
