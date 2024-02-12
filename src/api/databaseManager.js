@@ -2,9 +2,10 @@ import AWS from 'aws-sdk';
 import store from '@/main.js';
 
 AWS.config.update({
-  accessKeyId: 'AKIAU6GD3COHK6H7SLBR',
-  secretAccessKey: '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',
-  region: 'us-east-1'
+  region: 'us-east-1',
+  credentials: new AWS.CognitoIdentityCredentials({
+    IdentityPoolId: 'us-east-1:afb97e84-8205-46b8-b592-e1bef5a5f00e'
+  })
 });
 
 const ddb = new AWS.DynamoDB();
