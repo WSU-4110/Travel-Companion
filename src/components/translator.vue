@@ -15,7 +15,8 @@ import { translateFromText } from '@/api/translator';
 export default {
   data () {
     return {
-      test: 3
+      allTrips: null,
+      currentTrip: null
     }
   },
   methods: {
