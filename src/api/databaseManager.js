@@ -19,26 +19,47 @@ export function saveTrip(trip) {
   trip.timestamp = Date.now();
 
   const params = {
-    TableName: "UserTrips",
+    TableName: 'UserTrips',
     Item: AWS.DynamoDB.Converter.marshall(trip)
   };
 
   ddb.putItem(params, (err, data) => {
     if (err) {
-      throw err;
+      throw new Error(err);
     } else {
       console.log("Item put successfully");
     }
   });
 }
 
+export function updateTrip(trip) {
+  deleteTrip(trip);
+  saveTrip(trip);
+}
+
+export function deleteTrip(trip) {
+  trip = AWS.DynamoDB.Converter.marshall(trip);
+  const params = {
+    TableName: 'UserTrips',
+    Key: {
+      username: trip.username,
+      timestamp: trip.timestamp
+    }
+  };
+
+  ddb.deleteItem(params, (err) => {
+    if (err) {
+      throw new Error(err);
+    } else {
+      console.log("Item deleted successfully");
+    }
+  });
+}
+
 export async function getAllTrips() {
   const params = {
-    TableName: "UserTrips",
-    KeyConditionExpression: "#username = :username",
-    ExpressionAttributeNames: {
-      "#username": "username"
-    },
+    TableName: 'UserTrips',
+    KeyConditionExpression: 'username = :username',
     ExpressionAttributeValues: {
       ":username": { S: store.getters.getUsername }
     }
