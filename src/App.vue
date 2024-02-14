@@ -3,6 +3,8 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <template>
+  <Sidebar /> <!-- Add Sidebar To Page -->
+  <div :style="{'margin-left' : sidebarWidth }"></div>
   <header>
     <img @click="clickLogo" alt="Vue logo" class="logo" src="@/assets/scalable-logo.svg"/>
     <div class="wrapper">
@@ -24,8 +26,14 @@ import { RouterLink, RouterView } from 'vue-router'
 <script>
 import { getUserAccount } from './api/userVerification';
 import { signCurrentUserOut } from './api/userVerification';
+import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
+import { sidebarWidth } from '@/components/state' //Import sidebarWidth
 
 export default {
+  components: {Sidebar}, //Retrieve Sidebar Component and return sidebarWidth
+  setup(){
+    return {sidebarWidth}
+  },
   data () {
     return {
       alertStatus: null,
