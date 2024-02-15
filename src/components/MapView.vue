@@ -1,18 +1,22 @@
 <template>
+    <!-- Map container -->
     <div ref="mapContainer" class="map-container"></div>
 </template>
 
 <script>
     export default {
         props: {
+            // Address received as prop from parent component
             address: {
                 type: String,
                 required: true
             },
+            // Default zoom level for the map
             defaultZoom: {
                 type: Number,
-                default: 14 // Default zoom level
+                default: 13 // Default zoom level
             },
+            // Flag to indicate if search button is clicked
             searchClicked: {
                 type: Boolean,
                 default: false
@@ -28,12 +32,12 @@
             }
         },
         mounted() {
-            // Initialize the map
+            // Initialize the map when component is mounted
             this.initMap();
         },
         methods: {
             initMap() {
-                // Initialize the map with default zoom
+                // Initialize the map with default zoom and center coordinates
                 this.map = new google.maps.Map(this.$refs.mapContainer, {
                     center: { lat: 42.3314, lng: -83.0458 }, // Default to center of the world
                     zoom: this.defaultZoom // Use default zoom level
@@ -50,6 +54,7 @@
                 const geocoder = new google.maps.Geocoder();
                 geocoder.geocode({ address }, (results, status) => {
                     if (status === 'OK' && results[0]) {
+                        // Extract location from geocoding results
                         const location = results[0].geometry.location;
                         // Center the map to the location of the address
                         this.map.setCenter(location);
@@ -68,6 +73,7 @@
 </script>
 
 <style scoped>
+    /* Style for map container */
     .map-container {
         width: 100%;
         height: 300px; /* Adjust height as needed */
