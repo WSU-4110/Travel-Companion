@@ -4,12 +4,23 @@
 <script>
 import {collapsed, toggleSidebar, sidebarWidth} from './state'
 import SidebarLink from './SidebarLink.vue'
+import { signCurrentUserOut } from '@/api/userVerification'
+
 export default{
     props: {},
     components: {SidebarLink}, // Getting SidebarLink Component
     setup() {
         return {collapsed,toggleSidebar,sidebarWidth} // Returning status of collapsed, toggleSidebar value, and sidebarWidth value
-
+    },
+    computed: {
+      username() {
+        return this.$store.getters.getUsername;
+      }
+    },
+    methods: {
+      signUserOut() {
+        signCurrentUserOut();
+      }
     }
 }</script>
 
@@ -20,20 +31,20 @@ export default{
             <span v-if="collapsed">
             <div class="wrapper">TC</div>
             </span>
-            <span v-else><div class="wrapper">Travel Companion</div></span> 
+            <span v-else><div class="wrapper">Travel Companion</div></span>
         </h2>
         <h5>
         <!-- Sidebar Links -->
-        <SidebarLink to="/" icon="fas fa-home">Home</SidebarLink>
-        <SidebarLink to="/signIn" icon="fas fa-right-to-bracket">Sign In</SidebarLink>
-        <SidebarLink to="/tripManager" icon="fas fa-plane">Trip Manager</SidebarLink>
+        <SidebarLink v-if="username" to="/" icon="fas fa-home">Home</SidebarLink>
+        <SidebarLink v-if="!username" to="/signIn" icon="fas fa-right-to-bracket">Sign In</SidebarLink>
+        <SidebarLink v-if="username" to="/tripManager" icon="fas fa-plane">Trip Manager</SidebarLink>
+        <SidebarLink v-if="username" icon="fas fa-sign-out" @click="signUserOut">Sign Out</SidebarLink>
         <!-- Only displaying icon when sidebar collapsed -->
         </h5>
         <span
             class="collapse-icon"
              :class="{'rotate-180' : collapsed}"
-            @click="toggleSidebar"
-        >
+            @click="toggleSidebar">
         <i class="fas fa-angle-double-left" />
         </span>
     </div>
@@ -80,5 +91,10 @@ export default{
 .rotate-180{
     transform: rotate(180deg);
     transition: 0.2s linear;
+}
+.sign-out {
+    position: absolute;
+    bottom: 0;
+    padding: 0.75em;
 }
 </style>
