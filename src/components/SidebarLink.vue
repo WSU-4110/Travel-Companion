@@ -7,7 +7,7 @@ import { collapsed } from './state';
 
 export default {
     props: {
-        to: {type: String, required: true},
+        to: {type: String, required: false},
         icon: { type: String, required: true}
     },
     setup(props){
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <template>
-    <router-link :to="to" class="link" :class="{active: isActive}">
+    <router-link :to="to ? to : '/signIn'" class="link" :class="{active: isActive}">
         <i class="icon" :class="icon" />
         <transition name="fade">
         <span v-if="!collapsed">
