@@ -80,6 +80,7 @@ export default {
     },
     saveTrip() {
       this.currentTrip.tripName = "trip" + Math.floor(Math.random() * 16);
+      this.currentTrip.coordinates = {latitude: 40, longitude: -10};
       saveTrip(this.currentTrip);
       this.getTrips();
     },
