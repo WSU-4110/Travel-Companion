@@ -10,23 +10,29 @@
                             <i class="dot circle link icon" @click="LocatorButtonPressed"></i>
                         </div>
                     </div>
-                    <button class="ui button">Search</button>
+                    <!-- Call updateMap method when search button is clicked -->
+                    <button class="ui button" @click.prevent="updateMap(address)">Search</button>
                 </div>
             </form>
+            <!-- Pass address to MapView component -->
+            <MapView ref="mapView" />
         </div>
     </section>
 </template>
 
 <script>
     import axios from 'axios'
-    //npm instal --save axios
+    import MapView from '@/components/MapView.vue'
 
     export default {
+        components: {
+            MapView
+        },
         data() {
             return {
                 address: "",
                 error: "",
-                spinner: true
+                spinner: false
             }
         },
         methods: {
@@ -52,7 +58,6 @@
                     this.spinner = false;
                 }
             },
-
             async getAddressFrom(lat, long) {
                 try {
                     const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long + "&key=AIzaSyB9dIA3ARjEmjIiiuBMjxSo-GgfEIudD4o");
@@ -66,16 +71,16 @@
                     console.log(error.message);
                     this.error = "Error: Failed to fetch address. Please try again later.";
                 }
+            },
+            // Update map with the provided address
+            updateMap(address) {
+                this.$refs.mapView.updateMap(address);
             }
-
-
         }
     };
 </script>
 
-
 <style>
-
     .ui.button,
     .dot.circle.icon {
         background-color: #808080;
