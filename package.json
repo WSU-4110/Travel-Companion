@@ -15,6 +15,7 @@
     "@popperjs/core": "^2.11.8",
     "amazon-cognito-identity-js": "^6.3.7",
     "aws-sdk": "^2.1550.0",
+    "axios": "^1.6.7",
     "bootstrap": "^5.3.2",
     "vue": "^3.4.15",
     "vue-router": "^4.2.5",
