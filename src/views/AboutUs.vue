@@ -1,5 +1,5 @@
 <script>
-import { collapsed } from '@/components/state';
+
 </script>
 
 <template>
