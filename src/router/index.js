@@ -28,6 +28,11 @@ const router = createRouter({
       path: '/aboutUs',
       name: 'About Us',
       component: AboutUs
+    },
+    {
+      path: '/UserLocation',
+      name: 'User Location',
+      component: UserLocation
     }
   ]
 })

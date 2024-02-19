@@ -36,9 +36,11 @@ export default{
         <h5>
         <!-- Sidebar Links -->
         <SidebarLink v-if="username" to="/" icon="fas fa-home">Home</SidebarLink>
-        <SidebarLink v-if="!username" to="/signIn" icon="fas fa-right-to-bracket">Sign In</SidebarLink>
+        <SidebarLink v-if="username" to="/UserLocation" icon="fas fa-map-location-dot">Map Tool</SidebarLink>
         <SidebarLink v-if="username" to="/tripManager" icon="fas fa-plane">Trip Manager</SidebarLink>
+        <SidebarLink v-if="!username" to="/signIn" icon="fas fa-right-to-bracket">Sign In</SidebarLink>
         <SidebarLink v-if="username" icon="fas fa-sign-out" @click="signUserOut">Sign Out</SidebarLink>
+
         <!-- Only displaying icon when sidebar collapsed -->
         </h5>
         <span
