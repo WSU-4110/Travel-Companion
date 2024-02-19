@@ -14,7 +14,7 @@
             // Default zoom level for the map
             defaultZoom: {
                 type: Number,
-                default: 13 // Default zoom level
+                default: 15 // Default zoom level
             },
             // Flag to indicate if search button is clicked
             searchClicked: {
@@ -39,7 +39,7 @@
             initMap() {
                 // Initialize the map with default zoom and center coordinates
                 this.map = new google.maps.Map(this.$refs.mapContainer, {
-                    center: { lat: 42.3314, lng: -83.0458 }, // Default to center of the world
+                    center: { lat: 42.6381, lng: -90.8687 }, // Default to center of the world
                     zoom: this.defaultZoom // Use default zoom level
                 });
             },
