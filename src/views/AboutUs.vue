@@ -15,7 +15,6 @@
                 tools and features tailored to make anyones experience in an unfamiliar place more enjoyable by removing the hastle of constantly navigating different applications 
                 and tools in their phones. Our Travel Comapnion seeks to encapsulate any tools or utilities a traveler would need when planning their trip, on their trip, or remembering
                 their trip. </p>
-
 </template>
 
 <style>
