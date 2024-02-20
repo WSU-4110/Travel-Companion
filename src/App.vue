@@ -57,14 +57,6 @@ export default {
 </script>
 
 <style scoped>
-nav {
-  display: flex;
-}
-
-.nav-link {
-  padding-right: 1rem;
-  text-decoration: underline;
-}
 
 .logo {
   cursor: pointer;
