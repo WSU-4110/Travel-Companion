@@ -1,85 +1,67 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/scalable-logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+  <Sidebar /> <!-- Add Sidebar To Page -->
+  <div :style="{'margin-left' : sidebarWidth }">
+    <header>
+      <img @click="clickLogo" alt="Vue logo" class="logo" src="@/assets/scalable-logo.svg"/>
+    </header>
+    <div v-if="alertStatus" class="alert alert-dismissible fade show" :class="alertStatus" role="alert">
+      {{ alertMessage }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="dismissAlert"></button>
     </div>
-  </header>
-
-  <RouterView />
+    <RouterView />
+  </div>
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<script>
+import { getUserAccount } from './api/userVerification';
+import { signCurrentUserOut } from './api/userVerification';
+import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
+import { sidebarWidth } from '@/components/state' //Import sidebarWidth
+
+export default {
+  components: {Sidebar}, //Retrieve Sidebar Component and return sidebarWidth
+  data () {
+    return {
+      alertStatus: null,
+      alertMessage: ""
+    }
+  },
+  created () {
+    this.$store.commit('setUsername', getUserAccount());
+  },
+  computed: {
+    username() {
+      return this.$store.getters.getUsername;
+    }
+  },
+  methods: {
+    signUserOut() {
+      signCurrentUserOut();
+      this.alertMessage = "Successfully Signed Out";
+      this.alertStatus = 'alert-success';
+      this.$router.push('/signIn');
+    },
+    clickLogo() {
+      this.$router.push('/');
+    },
+    dismissAlert() {
+      this.alertMessage = "";
+      this.alertStatus = null;
+    }
+  }
 }
+</script>
+
+<style scoped>
 
 .logo {
+  cursor: pointer;
   display: block;
   margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
+  width: 150px;
 }
 </style>
