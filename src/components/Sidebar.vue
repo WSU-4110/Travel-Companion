@@ -41,6 +41,7 @@ export default{
         <SidebarLink v-if="username" to="/tripManager" icon="fas fa-plane">Trip Manager</SidebarLink>
         <SidebarLink v-if="username" to="/currencyExchange" icon="fas fa-solid fa-coins">Currency Exchange</SidebarLink>
         <SidebarLink v-if="username" to="/weather" icon="fas fa-solid fa-cloud-sun">Weather</SidebarLink>
+        <SidebarLink v-if="username" to="/Ai" icon = "fas fa-solid fa-route" >Itinerary</SidebarLink>
         <SidebarLink v-if="username" to="/translator" icon="fas fa-language">Translator</SidebarLink>
         <!--Bottom Element should be Sign in/Sign Out-->
         <!--Sign in only appears when !username-->

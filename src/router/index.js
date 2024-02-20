@@ -6,6 +6,7 @@ import AboutUs from '@/views/AboutUs.vue'
 import UserLocation from '@/views/UserLocation.vue'
 import CurrencyExchange from '@/views/currencyExchange.vue'
 import Weather from '@/views/Weather.vue'
+import AI from '@/views/AI.vue'
 import Translator from '@/views/TranslatorView.vue'
 
 const router = createRouter({
@@ -45,6 +46,11 @@ const router = createRouter({
       path: '/Weather',
       name: 'Weather',
       component: Weather
+    },
+    {
+      path: '/AI',
+      name: 'AI',
+      component: AI
     },
     {
       path: '/translator',
