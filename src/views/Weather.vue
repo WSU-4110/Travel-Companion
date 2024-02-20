@@ -23,24 +23,17 @@
 </template>
 
 <script>
-    const APIKEY = 'apikey';
-    // This is a free key for OpenWeather's API. it can only handle 60 calls/min, 1 mil calls/month. It supports the following features
-    //Current weather, 3hr forecast 5 days, basic weather maps, weather dashboard, air pollution API, Geocoding API, weather widgets, 95% uptime.
-    // There is no option for a 7 day forecast, but the 40/mo tier supports a daily 16 days forecast
-    // https://openweathermap.org/price
-
-
     export default
         {
             data() {
                 return {
                     city: '', //Initalizing functions for the weather display
-                    result: {}, 
-                    weather_main: '', 
-                    Weather_description: '', 
-                    wind_speed: 0, 
-                    wind_direction: 0, 
-                    clouds_percent: 0 
+                    result: {},
+                    weather_main: '',
+                    Weather_description: '',
+                    wind_speed: 0,
+                    wind_direction: 0,
+                    clouds_percent: 0,
                 };
             },
             methods:
@@ -52,7 +45,7 @@
                 async getWeather() {
                     if (!this.city) return;
                     try {
-                        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=${APIKEY}`); //Calling the API
+                        const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=${this.$store.getters.getWeatherApiKey}`); //Calling the API
                         const data = await res.json();
                         if (data.main) {
                             this.result = data.main; //typing API's data.main output to our result function
