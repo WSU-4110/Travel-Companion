@@ -6,6 +6,7 @@ import AboutUs from '@/views/AboutUs.vue'
 import UserLocation from '@/views/UserLocation.vue'
 import CurrencyExchange from '@/views/currencyExchange.vue'
 import Weather from '@/views/Weather.vue'
+import AI from '@/views/AI.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +45,11 @@ const router = createRouter({
       path: '/Weather',
       name: 'Weather',
       component: Weather
+    },
+    {
+      path: '/AI',
+      name: 'AI',
+      component: AI
     }
   ]
 })
