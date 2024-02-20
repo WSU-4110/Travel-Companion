@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <h3 v-if="username">Welcome {{ username }}!</h3>
+    
 
     <!-- for now the translator is here, ideally we will -->
     <!-- have a translator view/page which will use the component, -->
