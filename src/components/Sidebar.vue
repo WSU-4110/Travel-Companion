@@ -36,17 +36,27 @@ export default{
         <h5>
         <!-- Sidebar Links -->
         <SidebarLink v-if="username" to="/" icon="fas fa-home">Home</SidebarLink>
-        <SidebarLink v-if="!username" to="/signIn" icon="fas fa-right-to-bracket">Sign In</SidebarLink>
+        <SidebarLink v-if="username" to="/aboutUs" icon="fas fa-people-group">About Us</SidebarLink>
+        <SidebarLink v-if="username" to="/UserLocation" icon="fas fa-map-location-dot">Map Tool</SidebarLink>
         <SidebarLink v-if="username" to="/tripManager" icon="fas fa-plane">Trip Manager</SidebarLink>
+        <SidebarLink v-if="username" to="/currencyExchange" icon="fas fa-solid fa-coins">Currency Exchange</SidebarLink>
+        <SidebarLink v-if="username" to="/weather" icon="fas fa-solid fa-cloud-sun">Weather</SidebarLink>
+        <!--Bottom Element should be Sign in/Sign Out-->
+        <!--Sign in only appears when !username-->
+        <SidebarLink v-if="!username" to="/signIn" icon="fas fa-right-to-bracket">Sign In</SidebarLink>
         <SidebarLink v-if="username" icon="fas fa-sign-out" @click="signUserOut">Sign Out</SidebarLink>
+        
+       
         <!-- Only displaying icon when sidebar collapsed -->
         </h5>
+        <h4>
         <span
             class="collapse-icon"
              :class="{'rotate-180' : collapsed}"
             @click="toggleSidebar">
         <i class="fas fa-angle-double-left" />
         </span>
+        </h4>
     </div>
 </template>
 
@@ -84,7 +94,8 @@ export default{
     position: absolute;
     bottom: 0;
     padding: 0.75em;
-
+    
+   
     color: rgba(255,255,255,0.7);
     transition: 0.2s linear;
 }
@@ -96,5 +107,5 @@ export default{
     position: absolute;
     bottom: 0;
     padding: 0.75em;
-}
+}  
 </style>
