@@ -94,14 +94,8 @@
   } else {
     console.error('Please select starting and ending currencies, and enter an amount to convert.');
   }
-}
-
-
-}}
+}}}
   
-  </script>
-  
-  <style>
-  /* Add any custom styles here */
-  </style>
-  
+</script>
+<style>
+</style>  
