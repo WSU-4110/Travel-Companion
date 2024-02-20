@@ -1,26 +1,26 @@
 <template>
     <!-- UserLocation component template -->
-    <section class="ui two column centered grid">
-        <div class="column">
-            <!-- Form for entering address -->
-            <form class="ui segment large form">
-                <!-- Error message display -->
-                <div class="ui message red" v-show="error">{{ error }}</div>
-                <div class="ui segment">
-                    <!-- Input field for address -->
-                    <div class="field">
-                        <div class="ui right icon input large" :class="{ loading: spinner }">
-                            <input type="text" placeholder="Enter an address" v-model="address" />
-                            <!-- Locator button to get current location -->
-                            <i class="dot circle link icon" @click="LocatorButtonPressed"></i>
-                        </div>
+    <section class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <!-- Form for entering address -->
+                <form @submit.prevent="updateMap(address)" class="mt-4">
+                    <!-- Error message display -->
+                    <div v-if="error" class="alert alert-danger">{{ error }}</div>
+                    <div class="input-group mb-3">
+                        <!-- Input field for address -->
+                        <input type="text" class="form-control" placeholder="Enter an address" v-model="address" />
+                        <!-- Locator button to get current location -->
+                        <button @click="LocatorButtonPressed" class="btn btn-outline-secondary" type="button">
+                            Get Location
+                        </button>
                     </div>
                     <!-- Search button to search for entered address -->
-                    <button class="ui button" @click.prevent="updateMap(address)">Search</button>
-                </div>
-            </form>
-            <!-- MapView component to display the map -->
-            <MapView ref="mapView" />
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+                <!-- MapView component to display the map -->
+                <MapView ref="mapView" />
+            </div>
         </div>
     </section>
 </template>
@@ -99,10 +99,5 @@
 </script>
 
 <style>
-    /* Styles for buttons and icons */
-    .ui.button,
-    .dot.circle.icon {
-        background-color: #808080;
-        color: white;
-    }
+    /* Add your custom styles here */
 </style>
