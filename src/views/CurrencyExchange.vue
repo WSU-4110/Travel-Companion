@@ -6,14 +6,14 @@
         
         <div class="text-center">
         <div class="btn-group">
-        <select class="form-select form-select-lg mb-3" style="width:255px">
+        <select class="form-select form-select-lg mb-3" style="width:300px">
         <option selected>Select Starting Currency</option>
             <option value="1">USD</option>
             <option value="2">EUR</option>
             <option value="3">CAD</option>
         </select>
         &ensp;&ensp;
-        <select class="form-select form-select-lg mb-3" style="width:255px">
+        <select class="form-select form-select-lg mb-3" style="width:300px">
         <option selected>Select Ending Currency</option>
             <option value="1">USD</option>
             <option value="2">EUR</option>
