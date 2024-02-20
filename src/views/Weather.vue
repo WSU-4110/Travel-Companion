@@ -23,7 +23,7 @@
 </template>
 
 <script>
-    const APIKEY = '971148ebe422eba4a69a2e6fde51fa1f';
+    const APIKEY = 'apikey';
     // This is a free key for OpenWeather's API. it can only handle 60 calls/min, 1 mil calls/month. It supports the following features
     //Current weather, 3hr forecast 5 days, basic weather maps, weather dashboard, air pollution API, Geocoding API, weather widgets, 95% uptime.
     // There is no option for a 7 day forecast, but the 40/mo tier supports a daily 16 days forecast
