@@ -18,39 +18,32 @@ import { RouterLink, RouterView } from 'vue-router'
 
 <script>
 import { getUserAccount } from './api/userVerification';
-import { signCurrentUserOut } from './api/userVerification';
 import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
 import { sidebarWidth } from '@/components/state' //Import sidebarWidth
 
 export default {
   components: {Sidebar}, //Retrieve Sidebar Component and return sidebarWidth
-  data () {
-    return {
-      alertStatus: null,
-      alertMessage: ""
-    }
-  },
   created () {
     this.$store.commit('setUsername', getUserAccount());
   },
   computed: {
     username() {
       return this.$store.getters.getUsername;
+    },
+    alertStatus() {
+      return this.$store.getters.getAlertStatus;
+    },
+    alertMessage() {
+      return this.$store.getters.getAlertMessage;
     }
   },
   methods: {
-    signUserOut() {
-      signCurrentUserOut();
-      this.alertMessage = "Successfully Signed Out";
-      this.alertStatus = 'alert-success';
-      this.$router.push('/signIn');
-    },
     clickLogo() {
       this.$router.push('/');
     },
     dismissAlert() {
-      this.alertMessage = "";
-      this.alertStatus = null;
+      this.$store.commit('setAlertStatus', null);
+      this.$store.commit('setAlertMessage', '');
     }
   }
 }

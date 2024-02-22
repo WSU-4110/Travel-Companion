@@ -1,9 +1,5 @@
 <template>
   <div class="sign-in-page">
-    <div v-if="alertStatus" class="alert alert-dismissible fade show" :class="alertStatus" role="alert">
-      {{ alertMessage }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="dismissAlert"></button>
-    </div>
     <div v-if="action === 'signIn'">
       <h2>Sign In</h2>
       <div class="form-floating mb-2 w-50">
@@ -51,13 +47,12 @@
 
 <script>
 import { createNewUser, verifyCredentials } from '@/api/userVerification';
+import store from '@/main';
 
 export default {
   data () {
     return {
       action: 'signIn',
-      alertMessage: '',
-      alertStatus: null,
       username: null,
       password: null,
       email: null
@@ -77,25 +72,23 @@ export default {
   methods: {
     async signIn() {
       await verifyCredentials(this.username, this.password).then((session) => {
-        this.alertStatus = 'alert-success';
-        this.alertMessage = 'Successfully signed in';
+        this.$store.commit('setAlertStatus', 'alert-success');
+        this.$store.commit('setAlertMessage', 'Successfully signed in');
         this.$router.push('/');
       })
       .catch((error) => {
-        console.log("Authentication failed:", error);
-        this.alertStatus = 'alert-danger';
-        this.alertMessage = error.message;
+        this.$store.commit('setAlertStatus', 'alert-danger');
+        this.$store.commit('setAlertMessage', error.message);
       });
     },
     async createUser() {
       await createNewUser(this.username, this.password, this.email).then((result) => {
-        this.alertStatus = 'alert-success';
-        this.alertMessage = 'Successfully created user';
+        this.$store.commit('setAlertStatus', 'alert-success');
+        this.$store.commit('setAlertMessage', 'Successfully created user');
       })
       .catch((error) => {
-        console.log("create failed", error);
-        this.alertStatus = 'alert-danger';
-        this.alertMessage = error.message;
+        this.$store.commit('setAlertStatus', 'alert-danger');
+        this.$store.commit('setAlertMessage', error.message);
       });
     },
     toggleSignInSignUp() {
@@ -103,14 +96,9 @@ export default {
       this.clearInputs();
     },
     clearInputs() {
-      this.dismissAlert();
       this.username = null;
       this.password = null;
       this.email = null;
-    },
-    dismissAlert() {
-      this.alertMessage = "";
-      this.alertStatus = null;
     }
   }
 }

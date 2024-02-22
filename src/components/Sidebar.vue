@@ -20,6 +20,8 @@ export default{
     methods: {
       signUserOut() {
         signCurrentUserOut();
+        this.$store.commit('setAlertStatus', 'alert-success');
+        this.$store.commit('setAlertMessage', 'Successfully signed out');
       }
     }
 }</script>
