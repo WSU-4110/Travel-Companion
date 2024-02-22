@@ -47,7 +47,6 @@
 
 <script>
 import { createNewUser, verifyCredentials } from '@/api/userVerification';
-import store from '@/main';
 
 export default {
   data () {
