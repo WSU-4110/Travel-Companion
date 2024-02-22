@@ -75,13 +75,11 @@ export default {
     }
   },
   methods: {
-    testFunc() {
-      console.log("mmm");
-    },
     async signIn() {
       await verifyCredentials(this.username, this.password).then((session) => {
         this.alertStatus = 'alert-success';
         this.alertMessage = 'Successfully signed in';
+        this.$router.push('/');
       })
       .catch((error) => {
         console.log("Authentication failed:", error);

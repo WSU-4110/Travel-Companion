@@ -3,7 +3,7 @@
       <div class="text-center">
         <h1 class="display-7">Currency Exchange</h1>
       </div>
-      
+
       <div class="text-center">
         <div class="btn-group">
           <select v-model="startingCurrency" class="form-select form-select-lg mb-3" style="width:300px">
@@ -17,7 +17,7 @@
           </select>
         </div>
       </div>
-      
+
       <div class="text-center">
         <div class="btn-group">
           <div class="input-group mb-3">
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-  
+
       <div class="text-center">
         <button @click="convertCurrency" type="button" class="btn btn-primary"
           style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: 7.5rem; --bs-btn-font-size: 2rem;">
@@ -41,10 +41,10 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import axios from 'axios';
-  
+
   export default {
     data() {
       return {
@@ -95,7 +95,7 @@
     console.error('Please select starting and ending currencies, and enter an amount to convert.');
   }
 }}}
-  
+
 </script>
 <style>
-</style>  
+</style>
