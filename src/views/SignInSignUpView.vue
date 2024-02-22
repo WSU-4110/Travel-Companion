@@ -2,43 +2,47 @@
   <div class="sign-in-page">
     <div v-if="action === 'signIn'">
       <h2>Sign In</h2>
-      <div class="form-floating mb-2 w-50">
-        <input type="text" class="form-control" id="floatingInput" placeholder="user123" v-model="username">
-        <label for="floatingInput">Username</label>
-      </div>
-      <div class="form-floating mb-2 w-50">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
-        <label for="floatingPassword">Password</label>
-      </div>
-      <button
-        class="btn btn-primary"
-        @click="signIn"
-        :disabled="!signInButtonActive">
-        Sign In
-      </button>
+      <form @submit.prevent="signIn">
+        <div class="form-floating mb-2 w-50">
+          <input type="text" class="form-control" id="floatingInput" placeholder="user123" v-model="username">
+          <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating mb-2 w-50">
+          <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
+          <label for="floatingPassword">Password</label>
+        </div>
+        <button
+          class="btn btn-primary"
+          @click="signIn"
+          :disabled="!signInButtonActive">
+          Sign In
+        </button>
+      </form>
       <hr class="mt-2 mb-3"/>
       <p>Are you a new user? <a @click="toggleSignInSignUp" class="link-button">Create a new account</a></p>
     </div>
     <div v-else>
       <h2>Sign Up</h2>
-      <div class="form-floating mb-2 w-50">
-        <input type="text" class="form-control" id="floatingInput" placeholder="user123" v-model="username">
-        <label for="floatingInput">Username</label>
-      </div>
-      <div class="form-floating mb-2 w-50">
-        <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" v-model="email">
-        <label for="floatingInput">Email address</label>
-      </div>
-      <div class="form-floating mb-2 w-50">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
-        <label for="floatingPassword">Password</label>
-      </div>
-      <button
-        class="btn btn-primary"
-        @click="createUser"
-        :disabled="!signInButtonActive">
-        Sign Up
-      </button>
+      <form @submit.prevent="createUser">
+        <div class="form-floating mb-2 w-50">
+          <input type="text" class="form-control" id="floatingInput" placeholder="user123" v-model="username">
+          <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating mb-2 w-50">
+          <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" v-model="email">
+          <label for="floatingInput">Email address</label>
+        </div>
+        <div class="form-floating mb-2 w-50">
+          <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
+          <label for="floatingPassword">Password</label>
+        </div>
+        <button
+          class="btn btn-primary"
+          @click="createUser"
+          :disabled="!signInButtonActive">
+          Sign Up
+        </button>
+      </form>
       <hr class="mt-2 mb-3"/>
       <p>Already have an account? <a @click="toggleSignInSignUp" class="link-button">Sign in</a></p>
     </div>
