@@ -22,6 +22,9 @@ export default{
         signCurrentUserOut();
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully signed out');
+      },
+      clickLogo() {
+        this.$router.push('/');
       }
     }
 }</script>
@@ -29,7 +32,7 @@ export default{
 <template>
     <!-- Add Sidebar Class -->
     <div class="sidebar" :style="{width:sidebarWidth}">
-        <h2>
+        <h2 @click="clickLogo" class="clickable">
             <span v-if="collapsed">
             <div class="wrapper">TC</div>
             </span>
@@ -55,7 +58,7 @@ export default{
         </h5>
         <h4>
         <span
-            class="collapse-icon"
+            class="collapse-icon clickable"
              :class="{'rotate-180' : collapsed}"
             @click="toggleSidebar">
         <i class="fas fa-angle-double-left" />
@@ -76,6 +79,9 @@ export default{
 </style>
 
 <style scoped>
+.clickable {
+  cursor: pointer;
+}
 .sidebar{
     color:white;
     background-color: var(--sidebar-bg-color);

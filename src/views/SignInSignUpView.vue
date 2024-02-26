@@ -14,8 +14,9 @@
         <button
           class="btn btn-primary"
           @click="signIn"
-          :disabled="!signInButtonActive">
-          Sign In
+          :disabled="!signInButtonActive || isLoading">
+          <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          {{ isLoading ? 'Loading...' : 'Sign In' }}
         </button>
       </form>
       <hr class="mt-2 mb-3"/>
@@ -39,8 +40,9 @@
         <button
           class="btn btn-primary"
           @click="createUser"
-          :disabled="!signInButtonActive">
-          Sign Up
+          :disabled="!signInButtonActive || isLoading">
+          <span v-if="isLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          {{ isLoading ? 'Loading...' : 'Sign Up' }}
         </button>
       </form>
       <hr class="mt-2 mb-3"/>
@@ -58,7 +60,8 @@ export default {
       action: 'signIn',
       username: null,
       password: null,
-      email: null
+      email: null,
+      isLoading: false
     }
   },
   computed: {
@@ -74,6 +77,7 @@ export default {
   },
   methods: {
     async signIn() {
+      this.isLoading = true;
       await verifyCredentials(this.username, this.password).then((session) => {
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully signed in');
@@ -83,8 +87,11 @@ export default {
         this.$store.commit('setAlertStatus', 'alert-danger');
         this.$store.commit('setAlertMessage', error.message);
       });
+
+      this.isLoading = false;
     },
     async createUser() {
+      this.isLoading = true;
       await createNewUser(this.username, this.password, this.email).then((result) => {
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully created user');
@@ -93,6 +100,8 @@ export default {
         this.$store.commit('setAlertStatus', 'alert-danger');
         this.$store.commit('setAlertMessage', error.message);
       });
+
+      this.isLoading = false;
     },
     toggleSignInSignUp() {
       this.action = this.action === 'signIn' ? 'signUp' : 'signIn';
