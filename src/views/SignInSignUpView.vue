@@ -95,6 +95,7 @@ export default {
       await createNewUser(this.username, this.password, this.email).then((result) => {
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully created user');
+        setTimeout(() => this.$router.push('/'), 600);
       })
       .catch((error) => {
         this.$store.commit('setAlertStatus', 'alert-danger');
