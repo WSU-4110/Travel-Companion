@@ -1,7 +1,7 @@
 <template>
 
 <center>
-  
+
   <h4>Welcome to the translator page!</h4>
 
 </center>
@@ -16,7 +16,7 @@
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
       </select>
 
-      
+
       <span class="arrow" @click="swapLanguages">&#x21C4;</span> <!-- Unicode symbol for up-down arrow -->
 
       <select class="language-selector" v-model="targetLanguage">
@@ -26,21 +26,20 @@
     </div>
 
 
-   <!-- <button class="translate-button" @click="translate">Translate</button> --> 
+   <!-- <button class="translate-button" @click="translate">Translate</button> -->
     <div class="d-grid gap-2">
       <button class="btn btn-primary" type="button">Translate</button>
       <br>
    </div>
 
-  
-    
+
+
     <textarea class="translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
   </div>
 </template>
 
 <script>
-  //import axios from 'axios'; // Import Axios
-  import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios'; // Import Axios
 
 export default {
   data() {

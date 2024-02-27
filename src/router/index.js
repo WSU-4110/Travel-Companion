@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isUserSignedIn } from '@/api/userVerification'
 import HomeView from '@/views/HomeView.vue'
 import SignInSignUp from '@/views/SignInSignUpView.vue'
 import TripManager from '@/views/TripManagerView.vue'
@@ -58,6 +59,11 @@ const router = createRouter({
       component: Translator
     }
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Sign In' && !isUserSignedIn()) next({ name: 'Sign In' })
+  else next()
+});
 
 export default router

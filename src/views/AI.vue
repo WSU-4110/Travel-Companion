@@ -1,19 +1,14 @@
 <template>
-    <div>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Itinerary Suggestion</title>
-      </head>
-      <form @submit.prevent="handleSubmit">
-        <label for="destination">Enter destination:</label>
-        <input type="text" id="destination" v-model="destination" required>
-        <button type="submit">Get Itinerary</button>
-      </form>
-      <div id="itinerary">{{ itinerary }}</div>
-    </div>
-  </template>
-  
+  <div>
+    <form @submit.prevent="handleSubmit">
+      <label for="destination">Enter destination:</label>
+      <input type="text" id="destination" v-model="destination" required>
+      <button type="submit">Get Itinerary</button>
+    </form>
+    <div id="itinerary">{{ itinerary }}</div>
+  </div>
+</template>
+
   <script>
   export default {
     data() {
@@ -58,4 +53,3 @@
     }
   }
   </script>
-  

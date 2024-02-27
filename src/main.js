@@ -1,19 +1,20 @@
 import './assets/main.css'
 
 import * as bootstrap from 'bootstrap'
+import '@fortawesome/fontawesome-free/js/all'
 
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import App from './App.vue'
 import router from './router'
 
-import '@fortawesome/fontawesome-free/js/all'
-
 const store = createStore({
   state () {
     return {
       username: null,
-      weatherApiKey: null
+      weatherApiKey: null,
+      alertStatus: null,
+      alertMessage: ''
     }
   },
   getters: {
@@ -22,6 +23,12 @@ const store = createStore({
     },
     getWeatherApiKey(state) {
       return state.weatherApiKey;
+    },
+    getAlertStatus(state) {
+      return state.alertStatus;
+    },
+    getAlertMessage(state) {
+      return state.alertMessage;
     }
   },
   mutations: {
@@ -30,6 +37,12 @@ const store = createStore({
     },
     setWeatherApiKey(state, key) {
       state.weatherApiKey = key;
+    },
+    setAlertStatus(state, status) {
+      state.alertStatus = status;
+    },
+    setAlertMessage(state, message) {
+      state.alertMessage = message;
     }
   },
   actions: {},
