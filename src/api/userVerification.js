@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import { AuthenticationDetails, CognitoUserAttribute, CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
 import store from '@/main.js';
+import router from '@/router/index';
 
 AWS.config.region = 'us-east-1';
 
@@ -67,6 +68,7 @@ export function verifyCredentials(username, password) {
         const weatherKey = session.getIdToken().payload.weatherKey;
         store.commit('setUsername', userPool.getCurrentUser().username);
         store.commit('setWeatherApiKey', weatherKey);
+        router.push('/');
         resolve(session);
       },
       onFailure: (error) => {
