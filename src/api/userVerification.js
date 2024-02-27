@@ -68,6 +68,7 @@ export function verifyCredentials(username, password) {
         const weatherKey = session.getIdToken().payload.weatherKey;
         store.commit('setUsername', userPool.getCurrentUser().username);
         store.commit('setWeatherApiKey', weatherKey);
+        localStorage.setItem("weatherKey", weatherKey);
         router.push('/');
         resolve(session);
       },
