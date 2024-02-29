@@ -12,8 +12,6 @@ const poolData = {
 
 const userPool = new CognitoUserPool(poolData);
 
-//  will be used to route to signin page if user goes to specific path
-//  eg. travel-companion.com/trips
 export function isUserSignedIn() {
   return userPool.getCurrentUser() ? true : false;
 }

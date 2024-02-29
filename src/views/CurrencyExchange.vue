@@ -83,16 +83,19 @@
           this.conversionRate = rates[this.endingCurrency];
           console.log('Conversion rate:', this.conversionRate);
         } else {
-          console.error(`Conversion rate for ${this.endingCurrency} not available.`);
+          this.$store.commit('setAlertStatus', 'alert-warning');
+          this.$store.commit('setAlertMessage', `Conversion rate for ${this.endingCurrency} not available.`);
         }
       } else {
         console.error('Response data or rates are undefined');
       }
     } catch (error) {
-      console.error('An error occurred while fetching conversion rates:', error.message);
+      this.$store.commit('setAlertStatus', 'alert-danger');
+      this.$store.commit('setAlertMessage', `An error occurred while fetching conversion rates ${error.message}`);
     }
   } else {
-    console.error('Please select starting and ending currencies, and enter an amount to convert.');
+    this.$store.commit('setAlertStatus', 'alert-warning');
+    this.$store.commit('setAlertMessage', 'Please select starting and ending currencies, and enter an amount to convert.');
   }
 }}}
 

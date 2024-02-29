@@ -64,7 +64,9 @@
                             map: this.map
                         });
                     } else {
-                        console.error('Geocode was not successful for the following reason:', status);
+                        this.$store.commit('setAlertStatus', 'alert-danger');
+                        this.$store.commit('setAlertMessage',
+                          status === 'ZERO_RESULTS' ? `Location: ${address} is invalid` : `Geocode was not successful for the following reason: ${status}`);
                     }
                 });
             }

@@ -75,7 +75,8 @@ export default {
         this.translatedText = response.data.data.translations[0].translatedText;
       })
       .catch(error => {
-        console.error('Translation error:', error);
+        this.$store.commit('setAlertStatus', 'alert-danger');
+        this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       });
     }
   }

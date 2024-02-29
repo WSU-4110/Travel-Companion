@@ -22,6 +22,7 @@ export default{
         signCurrentUserOut();
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully signed out');
+        this.$store.commit('setUsername', null);
       },
       clickLogo() {
         this.$router.push('/');
