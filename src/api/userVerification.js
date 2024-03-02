@@ -64,9 +64,11 @@ export function verifyCredentials(username, password) {
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (session) => {
         const weatherKey = session.getIdToken().payload.weatherKey;
+        const locationKey = session.getIdToken().payload.locationKey;
         const currencyKey = session.getIdToken().payload.currencyKey;
         store.commit('setUsername', userPool.getCurrentUser().username);
         store.commit('setWeatherApiKey', weatherKey);
+        store.commit('setLocationApiKey', locationKey);
         store.commit('setCurrencyApiKey', currencyKey);
         router.push('/');
         resolve(session);

@@ -75,7 +75,7 @@
             async getAddressFrom(lat, long) {
                 try {
                     // Make API request to geocode coordinates
-                    const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long + "&key=AIzaSyB9dIA3ARjEmjIiiuBMjxSo-GgfEIudD4o");
+                    const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${this.$store.getters.getLocationApiKey}`);
                     if (response.data.error_message) {
                         console.log(response.data.error_message);
                         this.$store.commit('setAlertStatus', 'alert-danger');
