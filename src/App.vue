@@ -12,17 +12,19 @@ import { RouterLink, RouterView } from 'vue-router'
       {{ alertMessage }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="dismissAlert"></button>
     </div>
+    <TripSelector v-if="username"/>
     <RouterView />
   </div>
 </template>
 
 <script>
 import { getUserAccount } from './api/userVerification';
-import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
 import { sidebarWidth } from '@/components/state' //Import sidebarWidth
+import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
+import TripSelector from '@/components/TripSelector.vue';
 
 export default {
-  components: {Sidebar}, //Retrieve Sidebar Component and return sidebarWidth
+  components: {Sidebar, TripSelector},
   created () {
     this.$store.commit('setUsername', getUserAccount());
     this.$store.commit('setCurrencyApiKey', localStorage.getItem("currencyKey"));
