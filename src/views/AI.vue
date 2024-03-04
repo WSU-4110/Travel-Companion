@@ -36,7 +36,9 @@
           return data.choices[0].text.trim();
         } catch (error) {
           console.error('Error:', error);
-          return 'Sorry, something went wrong. Please try again later.';
+          this.$store.commit('setAlertStatus', 'alert-danger');
+          this.$store.commit('setAlertMessage', 'Sorry, something went wrong. Please try again later.');
+          return '';
         }
       },
       displayItinerary(itinerary) {

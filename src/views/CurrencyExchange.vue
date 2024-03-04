@@ -52,7 +52,6 @@
         endingCurrency: '',
         amount: 0,
         conversionRate: null,
-        apiKey: 'fca_live_0nD3HHGKOsJYluJOoEnHCVs7kg5LQEbyfrARpnLV',
         currencies : [ "AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HRK","HUF","IDR","ILS","INR","ISK","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","RUB","SEK","SGD","THB","TRY","USD","ZAR"]
       };
     },
@@ -74,7 +73,7 @@
 
   if (this.startingCurrency && this.endingCurrency && this.amount) {
     try {
-      const response = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_0nD3HHGKOsJYluJOoEnHCVs7kg5LQEbyfrARpnLV&currencies=${this.endingCurrency}`);
+      const response = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=${this.$store.getters.getCurrencyApiKey}&currencies=${this.endingCurrency}`);
       console.log('Response:', response);
 
       if (response.data && response.data.data) {
@@ -83,16 +82,19 @@
           this.conversionRate = rates[this.endingCurrency];
           console.log('Conversion rate:', this.conversionRate);
         } else {
-          console.error(`Conversion rate for ${this.endingCurrency} not available.`);
+          this.$store.commit('setAlertStatus', 'alert-warning');
+          this.$store.commit('setAlertMessage', `Conversion rate for ${this.endingCurrency} not available.`);
         }
       } else {
         console.error('Response data or rates are undefined');
       }
     } catch (error) {
-      console.error('An error occurred while fetching conversion rates:', error.message);
+      this.$store.commit('setAlertStatus', 'alert-danger');
+      this.$store.commit('setAlertMessage', `An error occurred while fetching conversion rates ${error.message}`);
     }
   } else {
-    console.error('Please select starting and ending currencies, and enter an amount to convert.');
+    this.$store.commit('setAlertStatus', 'alert-warning');
+    this.$store.commit('setAlertMessage', 'Please select starting and ending currencies, and enter an amount to convert.');
   }
 }}}
 

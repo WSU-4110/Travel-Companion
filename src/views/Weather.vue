@@ -55,11 +55,15 @@
                             this.wind_direction = data.wind.deg || 0; // tying API's data.wind.deg output to our wind_direction function
                             this.clouds_percent = data.clouds.all; // typing API's data.clouds.all output to our clouds_percent function
                         }
-                        else //Error Handling
-                        { console.error('No weather data found'); }
+                        else { //Error Handling
+                          this.$store.commit('setAlertStatus', 'alert-warning');
+                          this.$store.commit('setAlertMessage', `No weather data found for: ${this.city}`);
+                        }
                     }
-                    catch (error) //Error Handling
-                    { console.error('Error fetching weather data:', error); }
+                    catch (error) { //Error Handling
+                        this.$store.commit('setAlertStatus', 'alert-danger');
+                        this.$store.commit('setAlertMessage', `Error fetching weather data: ${error}`);
+                    }
                 },
 
             }

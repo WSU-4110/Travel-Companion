@@ -81,7 +81,6 @@ export default {
       await verifyCredentials(this.username, this.password).then((session) => {
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully signed in');
-        this.$router.push('/');
       })
       .catch((error) => {
         this.$store.commit('setAlertStatus', 'alert-danger');
@@ -95,7 +94,6 @@ export default {
       await createNewUser(this.username, this.password, this.email).then((result) => {
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully created user');
-        setTimeout(() => this.$router.push('/'), 600);
       })
       .catch((error) => {
         this.$store.commit('setAlertStatus', 'alert-danger');

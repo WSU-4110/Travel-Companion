@@ -25,6 +25,9 @@ export default {
   components: {Sidebar}, //Retrieve Sidebar Component and return sidebarWidth
   created () {
     this.$store.commit('setUsername', getUserAccount());
+    this.$store.commit('setCurrencyApiKey', localStorage.getItem("currencyKey"));
+    this.$store.commit('setLocationApiKey', localStorage.getItem("locationKey"));
+    this.$store.commit('setWeatherApiKey', localStorage.getItem("weatherKey"));
   },
   computed: {
     username() {
