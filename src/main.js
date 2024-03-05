@@ -16,6 +16,7 @@ const store = createStore({
       username: null,
       currencyApiKey: null,
       locationApiKey: null,
+      translationApiKey: null,
       weatherApiKey: null,
       alertStatus: null,
       alertMessage: '',
@@ -32,6 +33,9 @@ const store = createStore({
     },
     getLocationApiKey(state) {
       return state.locationApiKey;
+    },
+    getTranslationApiKey(state) {
+      return state.translationApiKey;
     },
     getWeatherApiKey(state) {
       return state.weatherApiKey;
@@ -60,6 +64,10 @@ const store = createStore({
     setLocationApiKey(state, key) {
       state.locationApiKey = key;
       localStorage.setItem("locationKey", key);
+    },
+    setTranslationApiKey(state, key) {
+      state.translationApiKey = key;
+      localStorage.setItem("translationKey", key);
     },
     setWeatherApiKey(state, key) {
       state.weatherApiKey = key;
