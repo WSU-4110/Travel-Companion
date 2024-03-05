@@ -14,6 +14,7 @@ const store = createStore({
   state () {
     return {
       username: null,
+      aiApiKey: null,
       currencyApiKey: null,
       locationApiKey: null,
       translationApiKey: null,
@@ -27,6 +28,9 @@ const store = createStore({
   getters: {
     getUsername(state) {
       return state.username;
+    },
+    getAiApiKey(state) {
+      return state.aiApiKey;
     },
     getCurrencyApiKey(state) {
       return state.currencyApiKey;
@@ -56,6 +60,10 @@ const store = createStore({
   mutations: {
     setUsername(state, username) {
       state.username = username;
+    },
+    setAiApiKey(state, key) {
+      state.aiApiKey = key;
+      localStorage.setItem("aiKey", key);
     },
     setCurrencyApiKey(state, key) {
       state.currencyApiKey = key;

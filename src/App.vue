@@ -27,6 +27,7 @@ export default {
   components: {Sidebar, TripSelector},
   created () {
     this.$store.commit('setUsername', getUserAccount());
+    this.$store.commit('setAiApiKey', localStorage.getItem("aiKey"));
     this.$store.commit('setCurrencyApiKey', localStorage.getItem("currencyKey"));
     this.$store.commit('setLocationApiKey', localStorage.getItem("locationKey"));
     this.$store.commit('setTranslationApiKey', localStorage.getItem("translationKey"));
