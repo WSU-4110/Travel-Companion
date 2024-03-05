@@ -1,42 +1,52 @@
 <template>
 
-<center>
+  <center>
+    <h4>Welcome to the translator page!</h4>
+  </center>
 
-  <h4>Welcome to the translator page!</h4>
-
-</center>
 
 
   <div class="translator-container">
-    <textarea class="input-text" v-model="inputText" placeholder="Enter text to translate"></textarea>
+    <textarea class="form-control" v-model="inputText" placeholder="Enter text to translate"></textarea>
+
+    <br>
 
     <div class="language-selectors">
-
-      <select class="language-selector" v-model="sourceLanguage">
+      <select class="form-select" v-model="sourceLanguage">
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
       </select>
 
 
-      <span class="arrow" @click="swapLanguages">&#x21C4;</span> <!-- Unicode symbol for up-down arrow -->
 
-      <select class="language-selector" v-model="targetLanguage">
+      <span class="arrow" @click="swapLanguages">&#x21C4; <br> </span>
+      <br>
+      <select class="form-select" v-model="targetLanguage">
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
+        
       </select>
-
+      
     </div>
+
+    <br>
 
 
    <!-- <button class="translate-button" @click="translate">Translate</button> -->
+
     <div class="d-grid gap-2">
-      <button class="btn btn-primary" type="button">Translate</button>
+      <button class="btn btn-primary" type="button" @click="translate">Translate</button>
       <br>
-   </div>
+    </div>
 
 
+    
 
-    <textarea class="translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
+    <textarea class="form-control translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
+
+
   </div>
 </template>
+
+
 
 <script>
 import axios from 'axios'; // Import Axios
@@ -91,15 +101,20 @@ export default {
 }
 
 .input-text,
-.language-selectors,
 .translate-button,
 .translated-text {
   width: 100%;
   margin-bottom: 10px;
 }
 
-.language-selector {
-  width: calc(49% - 10px);
+.language-selectors {
+  display: flex;
+  align-items: center;
+}
+
+.language-selectors select {
+  width: calc(50% - 20px); /* Adjust the width as needed */
+  margin-right: 10px;
 }
 
 .arrow {
@@ -124,3 +139,4 @@ export default {
   resize: none;
 }
 </style>
+
