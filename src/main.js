@@ -8,6 +8,8 @@ import { createStore } from 'vuex'
 import App from './App.vue'
 import router from './router'
 
+import { getAllTrips } from './api/databaseManager'
+
 const store = createStore({
   state () {
     return {
@@ -16,7 +18,9 @@ const store = createStore({
       locationApiKey: null,
       weatherApiKey: null,
       alertStatus: null,
-      alertMessage: ''
+      alertMessage: '',
+      allTrips: null,
+      currentTrip: null
     }
   },
   getters: {
@@ -37,6 +41,12 @@ const store = createStore({
     },
     getAlertMessage(state) {
       return state.alertMessage;
+    },
+    getAllTrips(state) {
+      return state.allTrips;
+    },
+    getCurrentTrip(state) {
+      return state.currentTrip;
     }
   },
   mutations: {
@@ -60,9 +70,21 @@ const store = createStore({
     },
     setAlertMessage(state, message) {
       state.alertMessage = message;
+    },
+    setOrUpdateCurrentTrip(state, trip) {
+      state.currentTrip = trip;
     }
   },
-  actions: {},
+  actions: {
+    async refreshAllTrips(context) {
+      context.state.allTrips = await getAllTrips();
+    },
+    resetStore(context) {
+      context.state.allTrips = null;
+      context.state.currentTrip = null;
+      context.state.username = null;
+    }
+  },
   modules: {}
 });
 

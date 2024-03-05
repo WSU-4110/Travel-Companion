@@ -1,6 +1,6 @@
 <template>
   <div class="trip-manager">
-    <p>This is the trip manager</p>
+    <p>This is the trip manager - soon to be deleted, the homepage will show basic trip information with more details on specific pages</p>
     <button
       class="btn btn-primary"
       @click="saveTrip">

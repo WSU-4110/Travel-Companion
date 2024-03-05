@@ -20,9 +20,9 @@ export default{
     methods: {
       signUserOut() {
         signCurrentUserOut();
+        this.$store.dispatch('resetStore');
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully signed out');
-        this.$store.commit('setUsername', null);
       },
       clickLogo() {
         this.$router.push('/');
