@@ -1,11 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { isUserSignedIn } from '@/api/userVerification'
 import HomeView from '@/views/HomeView.vue'
 import SignInSignUp from '@/views/SignInSignUpView.vue'
 import TripManager from '@/views/TripManagerView.vue'
 import AboutUs from '@/views/AboutUs.vue'
 import UserLocation from '@/views/UserLocation.vue'
-import CurrencyExchange from '@/views/currencyExchange.vue'
+import CurrencyExchange from '@/views/CurrencyExchange.vue'
 import Weather from '@/views/Weather.vue'
+import AI from '@/views/AI.vue'
 import Translator from '@/views/TranslatorView.vue'
 
 const router = createRouter({
@@ -47,11 +49,21 @@ const router = createRouter({
       component: Weather
     },
     {
+      path: '/AI',
+      name: 'AI',
+      component: AI
+    },
+    {
       path: '/translator',
       name: 'Translator',
       component: Translator
     }
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Sign In' && !isUserSignedIn()) next({ name: 'Sign In' })
+  else next()
+});
 
 export default router

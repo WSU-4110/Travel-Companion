@@ -1,6 +1,7 @@
 import AWS from 'aws-sdk';
 import { AuthenticationDetails, CognitoUserAttribute, CognitoUserPool, CognitoUser } from 'amazon-cognito-identity-js';
 import store from '@/main.js';
+import router from '@/router/index';
 
 AWS.config.region = 'us-east-1';
 
@@ -11,8 +12,6 @@ const poolData = {
 
 const userPool = new CognitoUserPool(poolData);
 
-//  will be used to route to signin page if user goes to specific path
-//  eg. travel-companion.com/trips
 export function isUserSignedIn() {
   return userPool.getCurrentUser() ? true : false;
 }
@@ -65,8 +64,13 @@ export function verifyCredentials(username, password) {
     cognitoUser.authenticateUser(authenticationDetails, {
       onSuccess: (session) => {
         const weatherKey = session.getIdToken().payload.weatherKey;
+        const locationKey = session.getIdToken().payload.locationKey;
+        const currencyKey = session.getIdToken().payload.currencyKey;
         store.commit('setUsername', userPool.getCurrentUser().username);
         store.commit('setWeatherApiKey', weatherKey);
+        store.commit('setLocationApiKey', locationKey);
+        store.commit('setCurrencyApiKey', currencyKey);
+        router.push('/');
         resolve(session);
       },
       onFailure: (error) => {

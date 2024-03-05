@@ -20,6 +20,12 @@ export default{
     methods: {
       signUserOut() {
         signCurrentUserOut();
+        this.$store.dispatch('resetStore');
+        this.$store.commit('setAlertStatus', 'alert-success');
+        this.$store.commit('setAlertMessage', 'Successfully signed out');
+      },
+      clickLogo() {
+        this.$router.push('/');
       }
     }
 }</script>
@@ -27,7 +33,7 @@ export default{
 <template>
     <!-- Add Sidebar Class -->
     <div class="sidebar" :style="{width:sidebarWidth}">
-        <h2>
+        <h2 @click="clickLogo" class="clickable">
             <span v-if="collapsed">
             <div class="wrapper">TC</div>
             </span>
@@ -41,6 +47,7 @@ export default{
         <SidebarLink v-if="username" to="/tripManager" icon="fas fa-plane">Trip Manager</SidebarLink>
         <SidebarLink v-if="username" to="/currencyExchange" icon="fas fa-solid fa-coins">Currency Exchange</SidebarLink>
         <SidebarLink v-if="username" to="/weather" icon="fas fa-solid fa-cloud-sun">Weather</SidebarLink>
+        <SidebarLink v-if="username" to="/Ai" icon = "fas fa-solid fa-route" >Itinerary</SidebarLink>
         <SidebarLink v-if="username" to="/translator" icon="fas fa-language">Translator</SidebarLink>
         <!--Bottom Element should be Sign in/Sign Out-->
         <!--Sign in only appears when !username-->
@@ -52,7 +59,7 @@ export default{
         </h5>
         <h4>
         <span
-            class="collapse-icon"
+            class="collapse-icon clickable"
              :class="{'rotate-180' : collapsed}"
             @click="toggleSidebar">
         <i class="fas fa-angle-double-left" />
@@ -73,6 +80,9 @@ export default{
 </style>
 
 <style scoped>
+.clickable {
+  cursor: pointer;
+}
 .sidebar{
     color:white;
     background-color: var(--sidebar-bg-color);

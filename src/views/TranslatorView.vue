@@ -1,7 +1,10 @@
 <template>
+
   <center>
     <h4>Welcome to the translator page!</h4>
   </center>
+
+
 
   <div class="translator-container">
     <textarea class="form-control" v-model="inputText" placeholder="Enter text to translate"></textarea>
@@ -12,6 +15,7 @@
       <select class="form-select" v-model="sourceLanguage">
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
       </select>
+
 
 
       <span class="arrow" @click="swapLanguages">&#x21C4; <br> </span>
@@ -25,22 +29,27 @@
 
     <br>
 
+
+   <!-- <button class="translate-button" @click="translate">Translate</button> -->
+
     <div class="d-grid gap-2">
       <button class="btn btn-primary" type="button" @click="translate">Translate</button>
       <br>
     </div>
 
+
     
 
     <textarea class="form-control translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
+
+
   </div>
 </template>
 
 
 
 <script>
-  //import axios from 'axios'; // Import Axios
-  import 'bootstrap/dist/css/bootstrap.min.css';
+import axios from 'axios'; // Import Axios
 
 export default {
   data() {
@@ -76,7 +85,8 @@ export default {
         this.translatedText = response.data.data.translations[0].translatedText;
       })
       .catch(error => {
-        console.error('Translation error:', error);
+        this.$store.commit('setAlertStatus', 'alert-danger');
+        this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       });
     }
   }

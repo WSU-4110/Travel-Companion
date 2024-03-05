@@ -1,38 +1,90 @@
 import './assets/main.css'
 
 import * as bootstrap from 'bootstrap'
+import '@fortawesome/fontawesome-free/js/all'
 
 import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import App from './App.vue'
 import router from './router'
 
-import '@fortawesome/fontawesome-free/js/all'
+import { getAllTrips } from './api/databaseManager'
 
 const store = createStore({
   state () {
     return {
       username: null,
-      weatherApiKey: null
+      currencyApiKey: null,
+      locationApiKey: null,
+      weatherApiKey: null,
+      alertStatus: null,
+      alertMessage: '',
+      allTrips: null,
+      currentTrip: null
     }
   },
   getters: {
     getUsername(state) {
       return state.username;
     },
+    getCurrencyApiKey(state) {
+      return state.currencyApiKey;
+    },
+    getLocationApiKey(state) {
+      return state.locationApiKey;
+    },
     getWeatherApiKey(state) {
       return state.weatherApiKey;
+    },
+    getAlertStatus(state) {
+      return state.alertStatus;
+    },
+    getAlertMessage(state) {
+      return state.alertMessage;
+    },
+    getAllTrips(state) {
+      return state.allTrips;
+    },
+    getCurrentTrip(state) {
+      return state.currentTrip;
     }
   },
   mutations: {
     setUsername(state, username) {
       state.username = username;
     },
+    setCurrencyApiKey(state, key) {
+      state.currencyApiKey = key;
+      localStorage.setItem("currencyKey", key);
+    },
+    setLocationApiKey(state, key) {
+      state.locationApiKey = key;
+      localStorage.setItem("locationKey", key);
+    },
     setWeatherApiKey(state, key) {
       state.weatherApiKey = key;
+      localStorage.setItem("weatherKey", key);
+    },
+    setAlertStatus(state, status) {
+      state.alertStatus = status;
+    },
+    setAlertMessage(state, message) {
+      state.alertMessage = message;
+    },
+    setOrUpdateCurrentTrip(state, trip) {
+      state.currentTrip = trip;
     }
   },
-  actions: {},
+  actions: {
+    async refreshAllTrips(context) {
+      context.state.allTrips = await getAllTrips();
+    },
+    resetStore(context) {
+      context.state.allTrips = null;
+      context.state.currentTrip = null;
+      context.state.username = null;
+    }
+  },
   modules: {}
 });
 

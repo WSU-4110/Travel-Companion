@@ -5,8 +5,6 @@
             <div class="col-md-6">
                 <!-- Form for entering address -->
                 <form @submit.prevent="updateMap(address)" class="mt-4">
-                    <!-- Error message display -->
-                    <div v-if="error" class="alert alert-danger">{{ error }}</div>
                     <div class="input-group mb-3">
                         <!-- Input field for address -->
                         <input type="text" class="form-control" placeholder="Enter an address" v-model="address" />
@@ -39,8 +37,6 @@
             return {
                 // Address entered by the user
                 address: "",
-                // Error message
-                error: "",
                 // Loading spinner flag
                 spinner: false
             }
@@ -64,12 +60,14 @@
                         },
                         // Handle errors
                         error => {
-                            this.error = error.message;
+                            this.$store.commit('setAlertStatus', 'alert-danger');
+                            this.$store.commit('setAlertMessage', error.message);
                             this.spinner = false;
                         }
                     );
                 } else {
-                    this.error = "Your browser does not support geolocation API";
+                    this.$store.commit('setAlertStatus', 'alert-danger');
+                    this.$store.commit('setAlertMessage', 'Your browser does not support geolocation API');
                     this.spinner = false;
                 }
             },
@@ -77,17 +75,19 @@
             async getAddressFrom(lat, long) {
                 try {
                     // Make API request to geocode coordinates
-                    const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long + "&key=AIzaSyB9dIA3ARjEmjIiiuBMjxSo-GgfEIudD4o");
+                    const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${this.$store.getters.getLocationApiKey}`);
                     if (response.data.error_message) {
                         console.log(response.data.error_message);
-                        this.error = "Error: " + response.data.error_message;
+                        this.$store.commit('setAlertStatus', 'alert-danger');
+                        this.$store.commit('setAlertMessage', `Error ${response.data.error_message}`);
                     } else {
                         // Set address to formatted address from API response
                         this.address = response.data.results[0].formatted_address;
                     }
                 } catch (error) {
                     console.log(error.message);
-                    this.error = "Error: Failed to fetch address. Please try again later.";
+                    this.$store.commit('setAlertStatus', 'alert-danger');
+                    this.$store.commit('setAlertMessage', 'Error: Failed to fetch address. Please try again later');
                 }
             },
             // Method to update map with provided address

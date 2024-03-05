@@ -12,45 +12,43 @@ import { RouterLink, RouterView } from 'vue-router'
       {{ alertMessage }}
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @click="dismissAlert"></button>
     </div>
+    <TripSelector v-if="username"/>
     <RouterView />
   </div>
 </template>
 
 <script>
 import { getUserAccount } from './api/userVerification';
-import { signCurrentUserOut } from './api/userVerification';
-import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
 import { sidebarWidth } from '@/components/state' //Import sidebarWidth
+import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
+import TripSelector from '@/components/TripSelector.vue';
 
 export default {
-  components: {Sidebar}, //Retrieve Sidebar Component and return sidebarWidth
-  data () {
-    return {
-      alertStatus: null,
-      alertMessage: ""
-    }
-  },
+  components: {Sidebar, TripSelector},
   created () {
     this.$store.commit('setUsername', getUserAccount());
+    this.$store.commit('setCurrencyApiKey', localStorage.getItem("currencyKey"));
+    this.$store.commit('setLocationApiKey', localStorage.getItem("locationKey"));
+    this.$store.commit('setWeatherApiKey', localStorage.getItem("weatherKey"));
   },
   computed: {
     username() {
       return this.$store.getters.getUsername;
+    },
+    alertStatus() {
+      return this.$store.getters.getAlertStatus;
+    },
+    alertMessage() {
+      return this.$store.getters.getAlertMessage;
     }
   },
   methods: {
-    signUserOut() {
-      signCurrentUserOut();
-      this.alertMessage = "Successfully Signed Out";
-      this.alertStatus = 'alert-success';
-      this.$router.push('/signIn');
-    },
     clickLogo() {
       this.$router.push('/');
     },
     dismissAlert() {
-      this.alertMessage = "";
-      this.alertStatus = null;
+      this.$store.commit('setAlertStatus', null);
+      this.$store.commit('setAlertMessage', '');
     }
   }
 }
