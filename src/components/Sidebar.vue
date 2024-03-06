@@ -4,7 +4,7 @@
 <script>
 import {collapsed, toggleSidebar, sidebarWidth} from './state'
 import SidebarLink from './SidebarLink.vue'
-import { signCurrentUserOut } from '@/api/userVerification'
+import { userVerificationAdapter } from '@/main'
 
 export default{
     props: {},
@@ -19,7 +19,7 @@ export default{
     },
     methods: {
       signUserOut() {
-        signCurrentUserOut();
+        userVerificationAdapter.signCurrentUserOut();
         this.$store.dispatch('resetStore');
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully signed out');

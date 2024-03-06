@@ -7,8 +7,11 @@ import { createApp } from 'vue'
 import { createStore } from 'vuex'
 import App from './App.vue'
 import router from './router'
+import DynamoAdapter from '@/api/databaseManager'
+import UserVerificationAdapter from '@/api/userVerification'
 
-import { getAllTrips } from './api/databaseManager'
+const dynamoAdapter = new DynamoAdapter();
+const userVerificationAdapter = new UserVerificationAdapter();
 
 const store = createStore({
   state () {
@@ -93,7 +96,7 @@ const store = createStore({
   },
   actions: {
     async refreshAllTrips(context) {
-      context.state.allTrips = await getAllTrips();
+      context.state.allTrips = await dynamoAdapter.getAllTrips();
     },
     resetStore(context) {
       context.state.allTrips = null;
@@ -111,4 +114,6 @@ app.use(store);
 
 app.mount('#app');
 
+export { dynamoAdapter };
+export { userVerificationAdapter };
 export default store;

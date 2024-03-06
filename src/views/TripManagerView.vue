@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { deleteTrip, getAllTrips, saveTrip, updateTrip } from '@/api/databaseManager';
+import { dynamoAdapter } from '@/main';
 
 export default {
   data () {
@@ -70,7 +70,7 @@ export default {
   methods: {
     // these all are just to show how I intend for the manager to be used
     async getTrips() {
-      this.allTrips = await getAllTrips();
+      this.allTrips = await dynamoAdapter.getAllTrips();
       if (!this.allTrips) {
         console.log("no trips to fetch");
         return;
@@ -81,15 +81,15 @@ export default {
     saveTrip() {
       this.currentTrip.tripName = "trip" + Math.floor(Math.random() * 16);
       this.currentTrip.coordinates = {latitude: 40, longitude: -10};
-      saveTrip(this.currentTrip);
+      dynamoAdapter.saveTrip(this.currentTrip);
       this.getTrips();
     },
     updateTrip() {
-      updateTrip(this.currentTrip);
+      dynamoAdapter.updateTrip(this.currentTrip);
       this.getTrips();
     },
     deleteCurrentTrip() {
-      deleteTrip(this.currentTrip);
+      dynamoAdapter.deleteTrip(this.currentTrip);
       this.getTrips();
     },
     setCurrentTrip(newTrip) {
