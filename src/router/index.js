@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { userVerificationAdapter } from '@/main'
+import { cognitoAdapter } from '@/main'
 import HomeView from '@/views/HomeView.vue'
 import SignInSignUp from '@/views/SignInSignUpView.vue'
 import TripManager from '@/views/TripManagerView.vue'
@@ -62,7 +62,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (to.name !== 'Sign In' && !userVerificationAdapter.isUserSignedIn()) next({ name: 'Sign In' })
+  if (to.name !== 'Sign In' && !cognitoAdapter.isUserSignedIn()) next({ name: 'Sign In' })
   else next()
 });
 

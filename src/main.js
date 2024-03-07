@@ -11,7 +11,7 @@ import DynamoAdapter from '@/api/databaseManager'
 import UserVerificationAdapter from '@/api/userVerification'
 
 const dynamoAdapter = new DynamoAdapter();
-const userVerificationAdapter = new UserVerificationAdapter();
+const cognitoAdapter = new UserVerificationAdapter();
 
 const store = createStore({
   state () {
@@ -115,5 +115,5 @@ app.use(store);
 app.mount('#app');
 
 export { dynamoAdapter };
-export { userVerificationAdapter };
+export { cognitoAdapter };
 export default store;

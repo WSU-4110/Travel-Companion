@@ -18,7 +18,7 @@ import { RouterLink, RouterView } from 'vue-router'
 </template>
 
 <script>
-import { userVerificationAdapter } from '@/main';
+import { cognitoAdapter } from '@/main';
 import { sidebarWidth } from '@/components/state' //Import sidebarWidth
 import Sidebar from '@/components/Sidebar.vue' //Import Sidebar
 import TripSelector from '@/components/TripSelector.vue';
@@ -26,7 +26,7 @@ import TripSelector from '@/components/TripSelector.vue';
 export default {
   components: {Sidebar, TripSelector},
   created () {
-    this.$store.commit('setUsername', userVerificationAdapter.getUserAccount());
+    this.$store.commit('setUsername', cognitoAdapter.getUserAccount());
     this.$store.commit('setAiApiKey', localStorage.getItem("aiKey"));
     this.$store.commit('setCurrencyApiKey', localStorage.getItem("currencyKey"));
     this.$store.commit('setLocationApiKey', localStorage.getItem("locationKey"));
