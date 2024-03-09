@@ -44,6 +44,8 @@
 
   <script>
   import axios from 'axios';
+  import currencyExchangeManager from '@/api/currencyExchangeManager';
+  import store from '@/main';
 
   export default {
     data() {
@@ -65,38 +67,16 @@
       }
     },
     methods: {
-        async convertCurrency() {
+      async convertCurrency() {
         console.log('Convert currency button clicked');
         console.log('Starting currency:', this.startingCurrency);
         console.log('Ending currency:', this.endingCurrency);
         console.log('Amount:', this.amount);
-
-  if (this.startingCurrency && this.endingCurrency && this.amount) {
-    try {
-      const response = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=${this.$store.getters.getCurrencyApiKey}&currencies=${this.endingCurrency}`);
-      console.log('Response:', response);
-
-      if (response.data && response.data.data) {
-        const rates = response.data.data;
-        if (this.endingCurrency in rates) {
-          this.conversionRate = rates[this.endingCurrency];
-          console.log('Conversion rate:', this.conversionRate);
-        } else {
-          this.$store.commit('setAlertStatus', 'alert-warning');
-          this.$store.commit('setAlertMessage', `Conversion rate for ${this.endingCurrency} not available.`);
-        }
-      } else {
-        console.error('Response data or rates are undefined');
-      }
-    } catch (error) {
-      this.$store.commit('setAlertStatus', 'alert-danger');
-      this.$store.commit('setAlertMessage', `An error occurred while fetching conversion rates ${error.message}`);
-    }
-  } else {
-    this.$store.commit('setAlertStatus', 'alert-warning');
-    this.$store.commit('setAlertMessage', 'Please select starting and ending currencies, and enter an amount to convert.');
-  }
-}}}
+        //Calling Manager to get conversion rate from api.
+        const manager = new currencyExchangeManager(store, this.startingCurrency, this.endingCurrency, this.amount);
+        await manager.convertCurrency();
+        this.conversionRate = manager.conversionRate;
+    }}}
 
 </script>
 <style>

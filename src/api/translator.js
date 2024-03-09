@@ -4,3 +4,4 @@ export function translateFromText(toBeTranslated) {
   // http call
   return toBeTranslated;
 }
+git 
