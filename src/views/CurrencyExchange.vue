@@ -46,41 +46,49 @@
   import axios from 'axios';
 
   export default {
-    data() {
-      return {
-        startingCurrency: '',
-        endingCurrency: '',
-        amount: 0,
-        conversionRate: null,
-        currencies : [ "AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HRK","HUF","IDR","ILS","INR","ISK","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","RUB","SEK","SGD","THB","TRY","USD","ZAR"]
-      };
-    },
-    computed: {
-      convertedAmount() {
-        if (this.conversionRate && this.amount) {
-          return (this.amount * this.conversionRate).toFixed(2);
-        } else {
-          return '0.00';
-        }
+  data() {
+    return {
+      startingCurrency: '', // Modify this to be a string variable
+      endingCurrency: '',
+      amount: 0,
+      conversionRate: null,
+      currencies : [ "AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HRK","HUF","IDR","ILS","INR","ISK","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","RUB","SEK","SGD","THB","TRY","USD","ZAR"]
+    };
+  },
+  computed: {
+    convertedAmount() {
+      if (this.conversionRate && this.amount) {
+        return (this.amount * this.conversionRate).toFixed(2);
+      } else {
+        return '0.00';
       }
-    },
-    methods: {
-        async convertCurrency() {
-        console.log('Convert currency button clicked');
-        console.log('Starting currency:', this.startingCurrency);
-        console.log('Ending currency:', this.endingCurrency);
-        console.log('Amount:', this.amount);
+    }
+  },
+  methods: {
+    async convertCurrency() {
+  console.log('Convert currency button clicked');
+  console.log('Starting currency:', this.startingCurrency);
+  console.log('Ending currency:', this.endingCurrency);
+  console.log('Amount:', this.amount);
 
   if (this.startingCurrency && this.endingCurrency && this.amount) {
     try {
-      const response = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=${this.$store.getters.getCurrencyApiKey}&currencies=${this.endingCurrency}`);
+      const response = await axios.get(`https://open.er-api.com/v6/latest/${this.startingCurrency}`);
       console.log('Response:', response);
 
-      if (response.data && response.data.data) {
-        const rates = response.data.data;
+      if (response.data && response.data.rates) {
+        const rates = response.data.rates;
+
         if (this.endingCurrency in rates) {
-          this.conversionRate = rates[this.endingCurrency];
-          console.log('Conversion rate:', this.conversionRate);
+          const conversionRate = rates[this.endingCurrency];
+          console.log('Conversion rate:', conversionRate);
+
+          // Calculate converted amount
+          const convertedAmount = this.amount * conversionRate;
+
+          this.conversionRate = conversionRate;
+          this.$store.commit('setAlertStatus', 'alert-success');
+          this.$store.commit('setAlertMessage', `Conversion successful! Converted amount: ${convertedAmount.toFixed(2)} ${this.endingCurrency}`);
         } else {
           this.$store.commit('setAlertStatus', 'alert-warning');
           this.$store.commit('setAlertMessage', `Conversion rate for ${this.endingCurrency} not available.`);
@@ -97,6 +105,7 @@
     this.$store.commit('setAlertMessage', 'Please select starting and ending currencies, and enter an amount to convert.');
   }
 }}}
+  
 
 </script>
 <style>
