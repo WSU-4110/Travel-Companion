@@ -72,23 +72,21 @@ export default {
     };
   },
   methods: {
-    translate() {
-      // Make API request to translation service
-      // Example: using axios for making HTTP requests
-      // Replace API_KEY with your actual API key
-      axios.post('https://translation.googleapis.com/language/translate/v2?key=YOUR_API_KEY', {
-        q: this.inputText,
-        source: this.sourceLanguage,
-        target: this.targetLanguage
-      })
-      .then(response => {
-        this.translatedText = response.data.data.translations[0].translatedText;
-      })
-      .catch(error => {
-        this.$store.commit('setAlertStatus', 'alert-danger');
-        this.$store.commit('setAlertMessage', `Translation error: ${error}`);
-      });
-    }
+    async translate() {
+      const response = await axios
+.get("https://api-free.deepl.com/v2/translate", {
+  params: {
+    auth_key: `${this.$store.getters.getLocationApiKey}`,
+    text: this.inputText,
+    target_lang: this.targetLanguage
+  },
+  proxy: {
+    host: "localhost",
+    port: 8080
+  }
+});
+
+}
   }
 };
 </script>
