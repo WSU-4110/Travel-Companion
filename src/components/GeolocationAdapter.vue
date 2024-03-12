@@ -1,3 +1,5 @@
+
+<!-- Implemented Adapter design pattern - Tracy -->
 <!-- GeolocationAdapter.vue -->
 <template>
     <div></div>
