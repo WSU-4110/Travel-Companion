@@ -25,7 +25,7 @@ Travel-Compaion utilizes OpenWeatherMap's API to generate a weather forecast for
 weather forecast. 
 -Future implementation will include a 7 day forecast
 
-### Development
+# Development
 Development Instructions
 These are some instructions to explain how to set up the repository for development.
 
