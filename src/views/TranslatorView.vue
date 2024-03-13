@@ -1,93 +1,74 @@
 <template>
-
-  <center>
-    <h4>Welcome to the translator page!</h4>
-  </center>
-
-
-
+  <div class="text-center"><h4>Welcome to the translator page!</h4></div>
   <div class="translator-container">
     <textarea class="form-control" v-model="inputText" placeholder="Enter text to translate"></textarea>
-
     <br>
-
     <div class="language-selectors">
       <select class="form-select" v-model="sourceLanguage">
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
       </select>
-
-
-
       <span class="arrow" @click="swapLanguages">&#x21C4; <br> </span>
       <br>
       <select class="form-select" v-model="targetLanguage">
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
-        
       </select>
-      
     </div>
-
     <br>
-
-
-   <!-- <button class="translate-button" @click="translate">Translate</button> -->
-
     <div class="d-grid gap-2">
       <button class="btn btn-primary" type="button" @click="translate">Translate</button>
       <br>
     </div>
-
-
-    
-
     <textarea class="form-control translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
-
-
   </div>
 </template>
 
-
-
 <script>
-import axios from 'axios'; // Import Axios
+import axios from 'axios';
+import store from '@/main.js';
 
 export default {
   data() {
     return {
       inputText: '',
-      sourceLanguage: 'en',
-      targetLanguage: 'es',
+      sourceLanguage: 'EN',
+      targetLanguage: 'ES',
       translatedText: '',
       languages: [
-        { code: 'en', name: 'English' },
-        { code: 'Ar', name: 'Arabic' },
-        { code: 'es', name: 'Spanish' },
-        { code: 'ge', name: 'German' },
-        { code: 'ja', name: 'Japanese' },
-        { code: 'fr', name: 'French' },
-
-
-        // Add more languages as needed
+        { code: 'EN', name: 'English' },
+        { code: 'AR', name: 'Arabic' },
+        { code: 'ES', name: 'Spanish' },
+        { code: 'DE', name: 'German' },
+        { code: 'JA', name: 'Japanese' },
+        { code: 'FR', name: 'French' },
       ]
     };
   },
   methods: {
-    translate() {
-      // Make API request to translation service
-      // Example: using axios for making HTTP requests
-      // Replace API_KEY with your actual API key
-      axios.post('https://translation.googleapis.com/language/translate/v2?key=YOUR_API_KEY', {
-        q: this.inputText,
-        source: this.sourceLanguage,
-        target: this.targetLanguage
-      })
-      .then(response => {
-        this.translatedText = response.data.data.translations[0].translatedText;
-      })
-      .catch(error => {
+    async translate() {
+      const options = {
+        method: 'POST',
+        url: 'https://deep-translate1.p.rapidapi.com/language/translate/v2',
+        headers: {
+          'content-type': 'application/json',
+          'X-RapidAPI-Key': store.getters.getTranslationApiKey,
+          'X-RapidAPI-Host': 'deep-translate1.p.rapidapi.com'
+        },
+        data: {
+          source: this.sourceLanguage,
+          target: this.targetLanguage,
+          q: this.inputText
+        }
+      };
+      try {
+        const response = await axios.request(options);
+        this.translatedText = response.data.data.translations.translatedText;
+        console.log('Input: ', this.inputText)
+        console.log('Response: ', response.data.data.translations.translatedText)
+      } catch (error) {
+        console.error(error);
         this.$store.commit('setAlertStatus', 'alert-danger');
         this.$store.commit('setAlertMessage', `Translation error: ${error}`);
-      });
+      }
     }
   }
 };
@@ -139,4 +120,3 @@ export default {
   resize: none;
 }
 </style>
-
