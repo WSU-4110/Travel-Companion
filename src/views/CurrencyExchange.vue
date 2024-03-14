@@ -87,8 +87,6 @@
           const convertedAmount = this.amount * conversionRate;
 
           this.conversionRate = conversionRate;
-          this.$store.commit('setAlertStatus', 'alert-success');
-          this.$store.commit('setAlertMessage', `Conversion successful! Converted amount: ${convertedAmount.toFixed(2)} ${this.endingCurrency}`);
         } else {
           this.$store.commit('setAlertStatus', 'alert-warning');
           this.$store.commit('setAlertMessage', `Conversion rate for ${this.endingCurrency} not available.`);
