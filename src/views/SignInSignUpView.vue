@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { createNewUser, verifyCredentials } from '@/api/userVerification';
+import { cognitoAdapter } from '@/main';
 
 export default {
   data () {
@@ -78,7 +78,7 @@ export default {
   methods: {
     async signIn() {
       this.isLoading = true;
-      await verifyCredentials(this.username, this.password).then((session) => {
+      await cognitoAdapter.verifyCredentials(this.username, this.password).then((session) => {
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully signed in');
       })
@@ -91,7 +91,7 @@ export default {
     },
     async createUser() {
       this.isLoading = true;
-      await createNewUser(this.username, this.password, this.email).then((result) => {
+      await cognitoAdapter.createNewUser(this.username, this.password, this.email).then((result) => {
         this.$store.commit('setAlertStatus', 'alert-success');
         this.$store.commit('setAlertMessage', 'Successfully created user');
       })

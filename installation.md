@@ -1,4 +1,4 @@
-## Development Instructions
+## Installation/Development Instructions
 These are some instructions to explain how to set up the repository for development.
 
 ### Prerequisite

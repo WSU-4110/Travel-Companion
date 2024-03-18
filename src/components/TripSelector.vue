@@ -73,8 +73,7 @@
 </template>
 
 <script>
-import { deleteTrip } from '@/api/databaseManager';
-import { saveTrip } from '@/api/databaseManager';
+import { dynamoAdapter } from '@/main';
 
 export default {
   name: 'TripSelector',
@@ -102,7 +101,7 @@ export default {
       this.$store.dispatch('refreshAllTrips');
     },
     createNewTrip() {
-      saveTrip({tripName: this.newTripName});
+      dynamoAdapter.saveTrip({tripName: this.newTripName});
       setTimeout(() => this.$store.dispatch('refreshAllTrips'), 400);
       setTimeout(this.findNewTrip, 600);
     },
@@ -114,7 +113,7 @@ export default {
       this.$store.commit('setOrUpdateCurrentTrip', trip);
     },
     deleteCurrentTrip() {
-      deleteTrip(this.currentTrip);
+      dynamoAdapter.deleteTrip(this.currentTrip);
       this.$store.commit('setOrUpdateCurrentTrip', null);
       setTimeout(() => this.$store.dispatch('refreshAllTrips'), 300);
     },
