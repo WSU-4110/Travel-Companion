@@ -34,16 +34,34 @@ export default {
       targetLanguage: 'ES',
       translatedText: '',
       languages: [
-        { code: 'EN', name: 'English' },
-        { code: 'AR', name: 'Arabic' },
-        { code: 'ES', name: 'Spanish' },
-        { code: 'DE', name: 'German' },
-        { code: 'JA', name: 'Japanese' },
-        { code: 'FR', name: 'French' },
       ]
     };
   },
   methods: {
+    //Method to fetch languages available by Translator Api
+    async fetchLanguages() {
+      const options = {
+        method: 'GET',
+        url: 'https://deep-translate1.p.rapidapi.com/language/translate/v2/languages',
+        headers: {
+          'X-RapidAPI-Key': store.getters.getTranslationApiKey,
+          'X-RapidAPI-Host': 'deep-translate1.p.rapidapi.com'
+        }
+      };
+      try {
+        const response = await axios.request(options);
+        const availableLanguages = response.data.languages;
+        // Map the available languages to the format you desire
+        const formattedLanguages = availableLanguages.map(lang => ({
+          code: lang.language,
+          name: lang.name
+        }));
+        // Update the languages array
+        this.languages = formattedLanguages;
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async translate() {
       const options = {
         method: 'POST',
@@ -70,6 +88,11 @@ export default {
         this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       }
     }
+  },
+  //Mounting fetchLanguages to populate lists on page load
+  mounted() {
+    // Fetch available languages on component mount
+    this.fetchLanguages();
   }
 };
 </script>
