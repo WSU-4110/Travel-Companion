@@ -39,6 +39,8 @@ These are some instructions to explain how to set up the repository for developm
 - After successfully installing dependencies, run `npm run dev` to start the server
   - When running, there will be an output similar to `Local: http://localhost:5173`. If you go to the outputted link in a web browser, you will be able to see the website. Any changes made to the code will be automatically recompiled, so the website will update in real time.
 
+### Running Tests
+- After doing all of the installation instructions, run `npm run test` to run all test suites
 
 ### Framework
 This project was developed using Vue.js
