@@ -1,8 +1,8 @@
 <template>
     <div>
         <p class="location-info">Please insert your location in one of the following formats and either press Enter or click Get Weather:</p>
-        <p class="location-info">•  City's name, comma, 2-letter country code (ISO3166) (e.g. New York City, US)</p>
-        <p class="location-info">•  ZIP or postal code</p>
+        <p class="location-info">• City's name, comma, 2-letter country code (ISO3166) (e.g. New York City, US)</p>
+        <p class="location-info">• ZIP or postal code</p>
         <form @submit.prevent="getWeather">
             <input v-model.trim="city" placeholder="Enter city" /> <!-- Note: OpenWeatherMap API expects a specific format for cities, for example, 'Detroit' or 'Detroit, US' for Detroit -->
             <button type="submit">Get Weather</button>
