@@ -1,28 +1,39 @@
 <template>
     <div>
+        <p class="location-info">Please insert your location in one of the following formats and either press Enter or click Get Weather:</p>
+        <p class="location-info">•  City's name, comma, 2-letter country code (ISO3166) (e.g. New York City, US)</p>
+        <p class="location-info">•  ZIP or postal code</p>
         <form @submit.prevent="getWeather">
             <input v-model.trim="city" placeholder="Enter city" /> <!-- Note: OpenWeatherMap API expects a specific format for cities, for example, 'Detroit' or 'Detroit, US' for Detroit -->
             <button type="submit">Get Weather</button>
         </form>
         <div v-if="result.temp">
             <!-- Weather Display -->
-            <p><b>Coordinates:</b> {{ latitude }}, {{ longitude }}</p>
             <img v-if="weather_icon" :src="`https://openweathermap.org/img/wn/${weather_icon}@2x.png`" alt="Weather Icon" /> <!-- Display weather icon -->
-            <p><b>Condition:</b> {{ weather_main }}, {{ weather_description }}</p> <!-- Display weather description -->
-            <p><b>Temperature:</b> {{ convert_kelvin_to_fahrenheit(result.temp) }}°F ({{ convert_kelvin_to_celsius(result.temp) }}°C)</p> <!-- Displays temp in F and C -->
-            <p><b>Feels Like:</b> {{ convert_kelvin_to_fahrenheit(result.feels_like) }}°F ({{ convert_kelvin_to_celsius(result.feels_like) }}°C)</p> <!-- Displays feels like in F and C -->
-            <p><b>Humidity:</b> {{ result.humidity }}%</p> <!-- Displays air humidity -->
-            <p><b>Pressure:</b> {{ result.pressure }} hPa</p> <!-- Displays air pressure in hPa -->
-            <p><b>Wind Speed:</b> {{ convert_mps_to_mph(wind_speed) }} mph ({{ wind_speed }} m/s)</p> <!-- Displays wind speed in mph and m/s -->
-            <p><b>Wind Direction:</b> {{ wind_direction }}° ({{ getWindDirectionLetter(wind_direction) }})</p> <!-- Display wind direction in degrees and letter direction --> <!-- Display wind direction -->
-            <p><b>Cloudiness:</b> {{ clouds_percent }}%</p> <!-- Display cloud coverage -->
+            <p class="location-info"><b>Coordinates:</b> {{ latitude }}, {{ longitude }}</p>
+            <p class="location-info"><b>Condition:</b> {{ weather_main }}, {{ weather_description }}</p> <!-- Display weather description -->
+            <p class="location-info"><b>Temperature:</b> {{ convert_kelvin_to_fahrenheit(result.temp) }}°F ({{ convert_kelvin_to_celsius(result.temp) }}°C)</p> <!-- Displays temp in F and C -->
+            <p class="location-info"><b>Feels Like:</b> {{ convert_kelvin_to_fahrenheit(result.feels_like) }}°F ({{ convert_kelvin_to_celsius(result.feels_like) }}°C)</p> <!-- Displays feels like in F and C -->
+            <p class="location-info"><b>Humidity:</b> {{ result.humidity }}%</p> <!-- Displays air humidity -->
+            <p class="location-info"><b>Pressure:</b> {{ result.pressure }} hPa</p> <!-- Displays air pressure in hPa -->
+            <p class="location-info"><b>Wind Speed:</b> {{ convert_mps_to_mph(wind_speed) }} mph ({{ wind_speed }} m/s)</p> <!-- Displays wind speed in mph and m/s -->
+            <p class="location-info"><b>Wind Direction:</b> {{ wind_direction }}° ({{ getWindDirectionLetter(wind_direction) }})</p> <!-- Display wind direction in degrees and letter direction --> <!-- Display wind direction -->
+            <p class="location-info"><b>Cloudiness:</b> {{ clouds_percent }}%</p> <!-- Display cloud coverage -->
+            <p></p>
             <p>Weather provided by OpenWeather</p>
         </div>
         <div v-else>
+            <p></p>
             <p>No weather data found for {{ city }}</p> <!-- Error Handling -->
         </div>
     </div>
 </template>
+
+<style>
+    .location-info {
+        margin-bottom: 5px; /* Adjust the margin bottom to decrease spacing between lines */
+    }
+</style>
 
 <script>
     export default
