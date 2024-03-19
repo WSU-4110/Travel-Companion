@@ -3,7 +3,7 @@ import store from '@/main.js';
 
 // using the adapter design pattern - https://www.geeksforgeeks.org/adapter-pattern/
 export default class DatabaseAdapter {
-  #ddb;
+  ddb;
 
   constructor() {
     AWS.config.update({
@@ -13,7 +13,7 @@ export default class DatabaseAdapter {
       })
     });
 
-    this.#ddb = new AWS.DynamoDB();
+    this.ddb = new AWS.DynamoDB();
   }
 
   // saves a new trip to database
@@ -30,7 +30,7 @@ export default class DatabaseAdapter {
       Item: AWS.DynamoDB.Converter.marshall(trip)
     };
 
-    this.#ddb.putItem(params, (err, data) => {
+    this.ddb.putItem(params, (err, data) => {
       if (err) {
         throw new Error(err);
       } else {
@@ -56,7 +56,7 @@ export default class DatabaseAdapter {
       }
     };
 
-    this.#ddb.deleteItem(params, (err) => {
+    this.ddb.deleteItem(params, (err) => {
       if (err) {
         throw new Error(err);
       } else {
@@ -95,7 +95,7 @@ export default class DatabaseAdapter {
   // the actual call to query for data in ddb
   #queryDDB(params) {
     return new Promise((resolve, reject) => {
-      this.#ddb.query(params, (err, data) => {
+      this.ddb.query(params, (err, data) => {
         if (err) {
           reject(err);
         }
