@@ -5,7 +5,7 @@ import router from '@/router/index';
 
 // using the adapter design pattern - https://www.geeksforgeeks.org/adapter-pattern/
 export default class UserVerificationAdapter {
-  #userPool;
+  userPool;
 
   #poolData = {
     UserPoolId: 'us-east-1_CGVZssdaI',
@@ -14,17 +14,17 @@ export default class UserVerificationAdapter {
 
   constructor() {
     AWS.config.region = 'us-east-1';
-    this.#userPool = new CognitoUserPool(this.#poolData);
+    this.userPool = new CognitoUserPool(this.#poolData);
   }
 
   // checks if the user is authorized
   isUserSignedIn() {
-    return this.#userPool.getCurrentUser() ? true : false;
+    return this.userPool.getCurrentUser() ? true : false;
   }
 
   // returns the username
   getUserAccount() {
-    return this.#userPool.getCurrentUser()?.username ?? "";
+    return this.userPool.getCurrentUser()?.username ?? "";
   }
 
   // created a new user account
@@ -37,7 +37,7 @@ export default class UserVerificationAdapter {
         })
       ];
 
-      this.#userPool.signUp(username, password, attributeList, null, (error, result) => {
+      this.userPool.signUp(username, password, attributeList, null, (error, result) => {
         if (error) {
           reject(error);
           return;
@@ -65,7 +65,7 @@ export default class UserVerificationAdapter {
 
       const userData = {
         Username: username,
-        Pool: this.#userPool
+        Pool: this.userPool
       };
 
       const cognitoUser = new CognitoUser(userData);
@@ -78,7 +78,7 @@ export default class UserVerificationAdapter {
           const translationKey = session.getIdToken().payload.translationKey;
           const weatherKey = session.getIdToken().payload.weatherKey;
 
-          store.commit('setUsername', this.#userPool.getCurrentUser().username);
+          store.commit('setUsername', this.userPool.getCurrentUser().username);
           store.commit('setAiApiKey', aiKey);
           store.commit('setWeatherApiKey', weatherKey);
           store.commit('setLocationApiKey', locationKey);
@@ -98,7 +98,7 @@ export default class UserVerificationAdapter {
 
   // signs the user out
   signCurrentUserOut() {
-    const cognitoUser = this.#userPool?.getCurrentUser();
+    const cognitoUser = this.userPool?.getCurrentUser();
 
     if (cognitoUser) {
       cognitoUser.signOut();
