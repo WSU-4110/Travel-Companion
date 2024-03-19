@@ -6,6 +6,7 @@
         </form>
         <div v-if="result.temp">
             <!-- Weather Display -->
+            <p><b>Coordinates:</b> {{ latitude }}, {{ longitude }}</p>
             <img v-if="weather_icon" :src="`https://openweathermap.org/img/wn/${weather_icon}@2x.png`" alt="Weather Icon" /> <!-- Display weather icon -->
             <p><b>Condition:</b> {{ weather_main }}, {{ weather_description }}</p> <!-- Display weather description -->
             <p><b>Temperature:</b> {{ convert_kelvin_to_fahrenheit(result.temp) }}°F ({{ convert_kelvin_to_celsius(result.temp) }}°C)</p> <!-- Displays temp in F and C -->
@@ -35,6 +36,8 @@
                     wind_speed: 0,
                     wind_direction: 0,
                     clouds_percent: 0,
+                    latitude: 0,
+                    longitude: 0,
                 };
             },
             methods:
@@ -64,6 +67,8 @@
                             this.wind_speed = data.wind.speed; //typing API's data.wind.speed function to our wind_speed function
                             this.wind_direction = data.wind.deg || 0; // tying API's data.wind.deg output to our wind_direction function
                             this.clouds_percent = data.clouds.all; // typing API's data.clouds.all output to our clouds_percent function
+                            this.latitude = data.coord.lat;
+                            this.longitude = data.coord.lon;
                         }
                         else { //Error Handling
                           this.$store.commit('setAlertStatus', 'alert-warning');
