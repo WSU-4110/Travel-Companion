@@ -27,6 +27,8 @@
             <p>No weather data found for {{ city }}</p> <!-- Error Handling -->
         </div>
     </div>
+    <!-- MapView component to display the map -->
+    <MapView ref="mapView" />
 </template>
 
 <style>
@@ -36,8 +38,16 @@
 </style>
 
 <script>
+    // Import axios for HTTP requests
+    import axios from 'axios'
+    // Import MapView component
+    import MapView from '@/components/MapView.vue'
     export default
         {
+            components: {
+                MapView
+            },
+
             data() {
                 return {
                     city: '', //Initalizing functions for the weather display
