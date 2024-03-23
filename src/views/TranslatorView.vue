@@ -5,11 +5,13 @@
     <br>
     <div class="language-selectors">
       <select class="form-select" v-model="sourceLanguage">
-        <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
+        <option disabled selected value="">Source Language</option>
+        <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name  }}</option>
       </select>
-      <span class="arrow" @click="swapLanguages">&#x21C4; <br> </span>
+      <span class="arrow" @click="swapLanguages">&#x21C4;&ensp;<br> </span>
       <br>
       <select class="form-select" v-model="targetLanguage">
+        <option disabled selected value="">Target Language</option>
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
       </select>
     </div>
@@ -93,6 +95,8 @@ export default {
   mounted() {
     // Fetch available languages on component mount
     this.fetchLanguages();
+    this.sourceLanguage = '';
+    this.targetLanguage = '';
   }
 };
 </script>
@@ -112,6 +116,7 @@ export default {
 }
 
 .language-selectors {
+  margin-top: 0px;
   display: flex;
   align-items: center;
 }
