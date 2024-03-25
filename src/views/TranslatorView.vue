@@ -5,11 +5,13 @@
     <br>
     <div class="language-selectors">
       <select class="form-select" v-model="sourceLanguage">
-        <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
+        <option disabled selected value="">Source Language</option>
+        <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name  }}</option>
       </select>
-      <span class="arrow" @click="swapLanguages">&#x21C4; <br> </span>
+      <span class="arrow" @click="swapLanguages">&#x21C4;&ensp;<br> </span>
       <br>
       <select class="form-select" v-model="targetLanguage">
+        <option disabled selected value="">Target Language</option>
         <option v-for="language in languages" :key="language.code" :value="language.code">{{ language.name }}</option>
       </select>
     </div>
@@ -19,7 +21,20 @@
       <br>
     </div>
     <textarea class="form-control translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
-  </div>
+    
+    <!-- Chatbox style textbox and button -->
+    <div class="d-grid gap-2">
+    <button class="btn btn-primary save-translation" @click="saveTranslation">Save Translation</button>
+    </div>
+    <br>
+    <div class="text-center"><h4>Translation History:</h4></div>
+    <div class="saved-translations">
+        <textarea class="form-control saved-translations" placeholder="Saved Translations" v-model="savedTranslations"></textarea>  
+    </div>
+    </div>
+    
+  
+  
 </template>
 
 <script>
@@ -33,8 +48,8 @@ export default {
       sourceLanguage: 'EN',
       targetLanguage: 'ES',
       translatedText: '',
-      languages: [
-      ]
+      languages: [],
+      savedTranslations: ''
     };
   },
   methods: {
@@ -87,17 +102,39 @@ export default {
         this.$store.commit('setAlertStatus', 'alert-danger');
         this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       }
-    }
+    },
+    saveTranslation() {
+    // Find the language names corresponding to sourceLanguage and targetLanguage codes
+    const sourceLanguageName = this.languages.find(lang => lang.code === this.sourceLanguage)?.name || 'Unknown';
+    const targetLanguageName = this.languages.find(lang => lang.code === this.targetLanguage)?.name || 'Unknown';
+    
+    // Add the source and target language names along with input text and translated text to savedTranslations
+    this.savedTranslations += `Source Language: ${sourceLanguageName} \nInput Text: ${this.inputText}\n`;
+    this.savedTranslations += `Target Language: ${targetLanguageName} \nTranslated Text: ${this.translatedText}\n`;
+    this.savedTranslations += '---------------------------------------------\n';
+  }
   },
   //Mounting fetchLanguages to populate lists on page load
   mounted() {
     // Fetch available languages on component mount
     this.fetchLanguages();
+    this.sourceLanguage = '';
+    this.targetLanguage = '';
   }
 };
 </script>
 
 <style scoped>
+.save-translation {
+  margin: 0 auto; /* Center the button horizontally */
+  display: block; /* Make it a block-level element */
+}
+
+.saved-translations{
+  height: 200px;
+  width: 560px;
+}
+
 .translator-container {
   max-width: 600px;
   margin: 0 auto;
@@ -112,6 +149,7 @@ export default {
 }
 
 .language-selectors {
+  margin-top: 0px;
   display: flex;
   align-items: center;
 }
