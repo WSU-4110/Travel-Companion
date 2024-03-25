@@ -120,7 +120,27 @@ export default {
     },
     clearCreateModal() {
       this.newTripName = null;
+    },
+
+    mounted() {
+    // Listen for the 'locationSaved' event emitted by other components
+    this.$root.$on('locationSaved', (location) => {
+        // Add the location to the current trip
+        this.addLocationToCurrentTrip(location);
+    });
+},
+methods: {
+    addLocationToCurrentTrip(location) {
+        if (this.currentTrip) {
+            // Add the location to the current trip
+            // Assuming locations is an array in your trip object
+            this.currentTrip.locations.push(location);
+        } else {
+            console.error("No current trip selected.");
+        }
     }
+}
+    
   }
 }
 </script>
