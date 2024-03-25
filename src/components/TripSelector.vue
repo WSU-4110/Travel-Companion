@@ -122,6 +122,10 @@ export default {
       this.newTripName = null;
     },
 
+
+// this is possible implmentation for saving the location from userlocation
+// Michael, feel free to delete when updating for sprint 3, but pushing just for the sake of keeping it as possible use
+    /*
     mounted() {
     // Listen for the 'locationSaved' event emitted by other components
     this.$root.$on('locationSaved', (location) => {
@@ -140,6 +144,8 @@ methods: {
         }
     }
 }
+
+*/
     
   }
 }
