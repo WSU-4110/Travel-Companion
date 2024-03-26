@@ -3,7 +3,7 @@
       <div class="text-center">
         <h1 class="display-7">Currency Exchange</h1>
       </div>
-      
+
       <div class="text-center">
         <div class="btn-group">
           <select v-model="startingCurrency" class="form-select form-select-lg mb-3" style="width:300px">
@@ -17,7 +17,7 @@
           </select>
         </div>
       </div>
-      
+
       <div class="text-center">
         <div class="btn-group">
           <div class="input-group mb-3">
@@ -32,7 +32,7 @@
           </div>
         </div>
       </div>
-  
+
       <div class="text-center">
         <button @click="convertCurrency" type="button" class="btn btn-primary"
           style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: 7.5rem; --bs-btn-font-size: 2rem;">
@@ -41,61 +41,70 @@
       </div>
     </div>
   </template>
-  
+
   <script>
   import axios from 'axios';
-  
+
   export default {
-    data() {
-      return {
-        startingCurrency: '',
-        endingCurrency: '',
-        amount: 0,
-        conversionRate: null,
-        apiKey: 'fca_live_0nD3HHGKOsJYluJOoEnHCVs7kg5LQEbyfrARpnLV',
-        currencies : [ "AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HRK","HUF","IDR","ILS","INR","ISK","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","RUB","SEK","SGD","THB","TRY","USD","ZAR"]
-      };
-    },
-    computed: {
-      convertedAmount() {
-        if (this.conversionRate && this.amount) {
-          return (this.amount * this.conversionRate).toFixed(2);
-        } else {
-          return '0.00';
-        }
+  data() {
+    return {
+      startingCurrency: '', // Modify this to be a string variable
+      endingCurrency: '',
+      amount: 0,
+      conversionRate: null,
+      currencies : [ "AUD","BGN","BRL","CAD","CHF","CNY","CZK","DKK","EUR","GBP","HKD","HRK","HUF","IDR","ILS","INR","ISK","JPY","KRW","MXN","MYR","NOK","NZD","PHP","PLN","RON","RUB","SEK","SGD","THB","TRY","USD","ZAR"]
+    };
+  },
+  computed: {
+    convertedAmount() {
+      if (this.conversionRate && this.amount) {
+        return (this.amount * this.conversionRate).toFixed(2);
+      } else {
+        return '0.00';
       }
-    },
-    methods: {
-        async convertCurrency() {
-        console.log('Convert currency button clicked');
-        console.log('Starting currency:', this.startingCurrency);
-        console.log('Ending currency:', this.endingCurrency);
-        console.log('Amount:', this.amount);
+    }
+  },
+  methods: {
+    async convertCurrency() {
+  console.log('Convert currency button clicked');
+  console.log('Starting currency:', this.startingCurrency);
+  console.log('Ending currency:', this.endingCurrency);
+  console.log('Amount:', this.amount);
 
   if (this.startingCurrency && this.endingCurrency && this.amount) {
     try {
-      const response = await axios.get(`https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_0nD3HHGKOsJYluJOoEnHCVs7kg5LQEbyfrARpnLV&currencies=${this.endingCurrency}`);
+      const response = await axios.get(`https://open.er-api.com/v6/latest/${this.startingCurrency}`);
       console.log('Response:', response);
 
-      if (response.data && response.data.data) {
-        const rates = response.data.data;
+      if (response.data && response.data.rates) {
+        const rates = response.data.rates;
+
         if (this.endingCurrency in rates) {
-          this.conversionRate = rates[this.endingCurrency];
-          console.log('Conversion rate:', this.conversionRate);
+          const conversionRate = rates[this.endingCurrency];
+          console.log('Conversion rate:', conversionRate);
+
+          // Calculate converted amount
+          const convertedAmount = this.amount * conversionRate;
+
+          this.conversionRate = conversionRate;
         } else {
-          console.error(`Conversion rate for ${this.endingCurrency} not available.`);
+          this.$store.commit('setAlertStatus', 'alert-warning');
+          this.$store.commit('setAlertMessage', `Conversion rate for ${this.endingCurrency} not available.`);
         }
       } else {
         console.error('Response data or rates are undefined');
       }
     } catch (error) {
-      console.error('An error occurred while fetching conversion rates:', error.message);
+      this.$store.commit('setAlertStatus', 'alert-danger');
+      this.$store.commit('setAlertMessage', `An error occurred while fetching conversion rates ${error.message}`);
     }
   } else {
-    console.error('Please select starting and ending currencies, and enter an amount to convert.');
+    this.$store.commit('setAlertStatus', 'alert-warning');
+    this.$store.commit('setAlertMessage', 'Please select starting and ending currencies, and enter an amount to convert.');
   }
 }}}
   
+
 </script>
 <style>
-</style>  
+</style>

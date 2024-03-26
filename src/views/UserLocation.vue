@@ -4,9 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <!-- Form for entering address -->
-                <form @submit.prevent="updateMap(address)" class="mt-4">
-                    <!-- Error message display -->
-                    <div v-if="error" class="alert alert-danger">{{ error }}</div>
+                <form @submit.prevent="updateMap(address); saveLocation(address)" class="mt-4">
                     <div class="input-group mb-3">
                         <!-- Input field for address -->
                         <input type="text" class="form-control" placeholder="Enter an address" v-model="address" />
@@ -20,6 +18,15 @@
                 </form>
                 <!-- MapView component to display the map -->
                 <MapView ref="mapView" />
+                <!-- Button to save location to the current trip -->
+                <button @click="saveLocationToTrip" class="btn btn-success mt-3">Save Location to Current Trip</button>
+            </div>
+        </div>
+        <!-- Display box for saved locations -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <h4>Saved Locations</h4>
+                <textarea class="form-control" rows="5" v-model="savedLocations" readonly></textarea>
             </div>
         </div>
     </section>
@@ -39,13 +46,52 @@
             return {
                 // Address entered by the user
                 address: "",
-                // Error message
-                error: "",
+                // Latitude and longitude variables
+                latitude: null,
+                longitude: null,
                 // Loading spinner flag
-                spinner: false
+                spinner: false,
+                // Variable to store saved locations
+                savedLocations: "" // Initialize savedLocations variable
             }
         },
         methods: {
+
+
+        async fetchLocation() {
+            try {
+                // Check if geolocation is supported
+                if (navigator.geolocation) {
+                    // Get current position
+                    navigator.geolocation.getCurrentPosition(
+                        position => {
+                            const latitude = position.coords.latitude;
+                            const longitude = position.coords.longitude;
+                            // Log latitude and longitude
+                            console.log("Latitude:", latitude);
+                            console.log("Longitude:", longitude);
+                            // Set latitude and longitude
+                            this.latitude = latitude;
+                            this.longitude = longitude;
+                            // Get address from coordinates
+                            this.getAddressFrom(latitude, longitude);
+                        },
+                        // Handle errors
+                        error => {
+                            this.$store.commit('setAlertStatus', 'alert-danger');
+                            this.$store.commit('setAlertMessage', error.message);
+                        }
+                    );
+                } else {
+                    this.$store.commit('setAlertStatus', 'alert-danger');
+                    this.$store.commit('setAlertMessage', 'Your browser does not support geolocation API');
+                }
+                } catch (error) {
+                    console.log(error.message);
+                    this.$store.commit('setAlertStatus', 'alert-danger');
+                    this.$store.commit('setAlertMessage', 'Error: Failed to fetch location. Please try again later');
+                }
+             },
             // Method to get the current location
             LocatorButtonPressed() {
                 this.spinner = true;
@@ -59,17 +105,22 @@
                             // Log latitude and longitude
                             console.log("Latitude:", latitude);
                             console.log("Longitude:", longitude);
+                            // Set latitude and longitude
+                            this.latitude = latitude;
+                            this.longitude = longitude;
                             // Get address from coordinates
                             this.getAddressFrom(latitude, longitude);
                         },
                         // Handle errors
                         error => {
-                            this.error = error.message;
+                            this.$store.commit('setAlertStatus', 'alert-danger');
+                            this.$store.commit('setAlertMessage', error.message);
                             this.spinner = false;
                         }
                     );
                 } else {
-                    this.error = "Your browser does not support geolocation API";
+                    this.$store.commit('setAlertStatus', 'alert-danger');
+                    this.$store.commit('setAlertMessage', 'Your browser does not support geolocation API');
                     this.spinner = false;
                 }
             },
@@ -77,22 +128,60 @@
             async getAddressFrom(lat, long) {
                 try {
                     // Make API request to geocode coordinates
-                    const response = await axios.get("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + lat + "," + long + "&key=AIzaSyB9dIA3ARjEmjIiiuBMjxSo-GgfEIudD4o");
+                    const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${this.$store.getters.getLocationApiKey}`);
                     if (response.data.error_message) {
                         console.log(response.data.error_message);
-                        this.error = "Error: " + response.data.error_message;
+                        this.$store.commit('setAlertStatus', 'alert-danger');
+                        this.$store.commit('setAlertMessage', `Error ${response.data.error_message}`);
                     } else {
                         // Set address to formatted address from API response
                         this.address = response.data.results[0].formatted_address;
                     }
                 } catch (error) {
                     console.log(error.message);
-                    this.error = "Error: Failed to fetch address. Please try again later.";
+                    this.$store.commit('setAlertStatus', 'alert-danger');
+                    this.$store.commit('setAlertMessage', 'Error: Failed to fetch address. Please try again later');
                 }
             },
             // Method to update map with provided address
             updateMap(address) {
                 this.$refs.mapView.updateMap(address);
+            },
+            // Method to save the location
+            saveLocation() {
+                if (this.latitude !== null && this.longitude !== null) {
+                    this.savedLocations += `Address: ${this.address}\n`;
+                    this.savedLocations += `Latitude: ${this.latitude} \nLongitude: ${this.longitude}\n`;
+                    this.savedLocations += '---------------------------------------------\n';
+
+                    // Emit an event to indicate that a location has been saved
+                    this.$root.$emit('locationSaved', {
+                        address: this.address,
+                        latitude: this.latitude,
+                        longitude: this.longitude
+                    });
+                } else {
+                    console.error("Latitude and longitude are not available.");
+                }
+            },
+            // Method to save location to the current trip
+            saveLocationToTrip() {
+                // Get the current trip from TripSelector component
+                const currentTrip = this.$root.$refs.tripSelector.currentTrip;
+                if (currentTrip) {
+                    // Construct location object
+                    const location = {
+                        address: this.address,
+                        latitude: this.latitude,
+                        longitude: this.longitude
+                    };
+                    // Push location to the current trip's locations array
+                    currentTrip.locations.push(location);
+                    
+                } else {
+                    console.error("No current trip selected.");
+                    // Handle the case when no trip is selected
+                }
             }
         }
     };

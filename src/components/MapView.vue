@@ -33,7 +33,7 @@
         },
         mounted() {
             // Initialize the map when component is mounted
-            this.initMap();
+            this.loadGoogleMapsScript();
         },
         methods: {
             initMap() {
@@ -64,9 +64,18 @@
                             map: this.map
                         });
                     } else {
-                        console.error('Geocode was not successful for the following reason:', status);
+                        this.$store.commit('setAlertStatus', 'alert-danger');
+                        this.$store.commit('setAlertMessage',
+                          status === 'ZERO_RESULTS' ? `Location: ${address} is invalid` : `Geocode was not successful for the following reason: ${status}`);
                     }
                 });
+            },
+            loadGoogleMapsScript() {
+                const script = document.createElement('script');
+                script.src = `https://maps.googleapis.com/maps/api/js?libraries=places&key=${this.$store.getters.getLocationApiKey}`;
+                script.async = true;
+                script.onload = this.initMap;
+                document.head.appendChild(script);
             }
         }
     };
