@@ -1,23 +1,25 @@
 <template>
-  <div class="container">
-    <h1>Welcome to the Itinerary Page</h1>
-    <p>Enter your destination and trip length below to get a personalized itinerary for your trip:</p>
-    <form @submit.prevent="handleSubmit">
-      <label for="destination">Enter destination:</label>
-      <input type="text" id="destination" v-model="destination" required>
-      
-      <label for="tripLength">Enter trip length (days):</label>
-      <input type="number" id="tripLength" v-model.number="tripLength" required min="1">
-      
-      <button type="submit">Generate Itinerary</button>
-    </form>
-    <div id="itinerary" v-if="itinerary">
-      <p>{{ itinerary }}</p>
-      <button @click="generateDifferentItinerary">Generate a Different Itinerary</button>
-      <button @click="saveItinerary">Save Itinerary</button>
-    </div>
-    <div v-else>
-      <p>No itinerary available yet. Please enter a destination and trip length.</p>
+  <div>
+    <h1 class="header">Welcome to the Itinerary Page</h1>
+    <div class="container">
+      <p>Enter your destination and trip length below to get a personalized itinerary for your trip:</p>
+      <form @submit.prevent="handleSubmit">
+        <label for="destination">Enter destination:</label>
+        <input type="text" id="destination" v-model="destination" required>
+        
+        <label for="tripLength">Enter trip length (days):</label>
+        <input type="number" id="tripLength" v-model.number="tripLength" required min="1">
+        
+        <button type="submit">Generate Itinerary</button>
+      </form>
+      <div id="itinerary" v-if="itinerary">
+        <p>{{ itinerary }}</p>
+        <button @click="generateDifferentItinerary">Generate a Different Itinerary</button>
+        <button @click="saveItinerary">Save Itinerary</button>
+      </div>
+      <div v-else>
+        <p>No itinerary available yet. Please enter a destination and trip length.</p>
+      </div>
     </div>
   </div>
 </template>
@@ -106,12 +108,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 20vh;
+}
+
+.header {
+  text-align: center;
+  margin: 0;
 }
 </style>
