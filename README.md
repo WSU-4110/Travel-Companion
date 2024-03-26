@@ -1,4 +1,6 @@
 # Travel-Companion
+<img src="logo.png" alt="Travel Companion Logo" width="200"/>
+
 A travel companion providing several tools designed to make traveling anywhere foreign and domestic easy for anyone.
 
 ### Translator
