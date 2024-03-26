@@ -1,10 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { cognitoAdapter } from '@/main'
 import HomeView from '@/views/HomeView.vue'
 import SignInSignUp from '@/views/SignInSignUpView.vue'
-import TripManager from '@/views/TripManagerView.vue'
 import AboutUs from '@/views/AboutUs.vue'
 import UserLocation from '@/views/UserLocation.vue'
-import CurrencyExchange from '@/views/currencyExchange.vue'
+import CurrencyExchange from '@/views/CurrencyExchange.vue'
 import Weather from '@/views/Weather.vue'
 import AI from '@/views/AI.vue'
 import Translator from '@/views/TranslatorView.vue'
@@ -21,11 +21,6 @@ const router = createRouter({
       path: '/signIn',
       name: 'Sign In',
       component: SignInSignUp
-    },
-    {
-      path: '/tripManager',
-      name: 'Trip Manager',
-      component: TripManager
     },
     {
       path: '/aboutUs',
@@ -58,6 +53,11 @@ const router = createRouter({
       component: Translator
     }
   ]
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name !== 'Sign In' && !cognitoAdapter.isUserSignedIn()) next({ name: 'Sign In' })
+  else next()
+});
 
 export default router

@@ -4,7 +4,7 @@
 <script>
 import {collapsed, toggleSidebar, sidebarWidth} from './state'
 import SidebarLink from './SidebarLink.vue'
-import { signCurrentUserOut } from '@/api/userVerification'
+import { cognitoAdapter } from '@/main'
 
 export default{
     props: {},
@@ -19,7 +19,13 @@ export default{
     },
     methods: {
       signUserOut() {
-        signCurrentUserOut();
+        cognitoAdapter.signCurrentUserOut();
+        this.$store.dispatch('resetStore');
+        this.$store.commit('setAlertStatus', 'alert-success');
+        this.$store.commit('setAlertMessage', 'Successfully signed out');
+      },
+      clickLogo() {
+        this.$router.push('/');
       }
     }
 }</script>
@@ -27,7 +33,7 @@ export default{
 <template>
     <!-- Add Sidebar Class -->
     <div class="sidebar" :style="{width:sidebarWidth}">
-        <h2>
+        <h2 @click="clickLogo" class="clickable">
             <span v-if="collapsed">
             <div class="wrapper">TC</div>
             </span>
@@ -38,7 +44,6 @@ export default{
         <SidebarLink v-if="username" to="/" icon="fas fa-home">Home</SidebarLink>
         <SidebarLink v-if="username" to="/aboutUs" icon="fas fa-people-group">About Us</SidebarLink>
         <SidebarLink v-if="username" to="/UserLocation" icon="fas fa-map-location-dot">Map Tool</SidebarLink>
-        <SidebarLink v-if="username" to="/tripManager" icon="fas fa-plane">Trip Manager</SidebarLink>
         <SidebarLink v-if="username" to="/currencyExchange" icon="fas fa-solid fa-coins">Currency Exchange</SidebarLink>
         <SidebarLink v-if="username" to="/weather" icon="fas fa-solid fa-cloud-sun">Weather</SidebarLink>
         <SidebarLink v-if="username" to="/Ai" icon = "fas fa-solid fa-route" >Itinerary</SidebarLink>
@@ -53,7 +58,7 @@ export default{
         </h5>
         <h4>
         <span
-            class="collapse-icon"
+            class="collapse-icon clickable"
              :class="{'rotate-180' : collapsed}"
             @click="toggleSidebar">
         <i class="fas fa-angle-double-left" />
@@ -74,6 +79,9 @@ export default{
 </style>
 
 <style scoped>
+.clickable {
+  cursor: pointer;
+}
 .sidebar{
     color:white;
     background-color: var(--sidebar-bg-color);
