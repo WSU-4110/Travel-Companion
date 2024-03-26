@@ -119,7 +119,33 @@ export default {
     },
     clearCreateModal() {
       this.newTripName = null;
+    },
+
+
+// this is possible implmentation for saving the location from userlocation
+// Michael, feel free to delete when updating for sprint 3, but pushing just for the sake of keeping it as possible use
+    /*
+    mounted() {
+    // Listen for the 'locationSaved' event emitted by other components
+    this.$root.$on('locationSaved', (location) => {
+        // Add the location to the current trip
+        this.addLocationToCurrentTrip(location);
+    });
+},
+methods: {
+    addLocationToCurrentTrip(location) {
+        if (this.currentTrip) {
+            // Add the location to the current trip
+            // Assuming locations is an array in your trip object
+            this.currentTrip.locations.push(location);
+        } else {
+            console.error("No current trip selected.");
+        }
     }
+}
+
+*/
+    
   }
 }
 </script>
