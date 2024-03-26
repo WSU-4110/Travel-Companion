@@ -5,10 +5,10 @@
     <form @submit.prevent="handleSubmit">
       <label for="destination">Enter destination:</label>
       <input type="text" id="destination" v-model="destination" required>
-      
+
       <label for="tripLength">Enter trip length (days):</label>
       <input type="number" id="tripLength" v-model.number="tripLength" required min="1">
-      
+
       <button type="submit">Generate Itinerary</button>
     </form>
     <div id="itinerary" v-if="itinerary">
@@ -106,7 +106,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .container {
   display: flex;
   flex-direction: column;
