@@ -41,8 +41,8 @@ export default class DatabaseAdapter {
 
   // allows the user to update an existing trip
   updateTrip(trip) {
-    deleteTrip(trip);
-    saveTrip(trip);
+    this.deleteTrip(trip);
+    this.saveTrip(trip);
   }
 
   // allows the user to delete an existing trip

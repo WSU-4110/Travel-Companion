@@ -21,18 +21,20 @@
       <br>
     </div>
     <textarea class="form-control translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
-    
+
     <!-- Chatbox style textbox and button -->
     <div class="d-grid gap-2">
     <button class="btn btn-primary save-translation" @click="saveTranslation">Save Translation</button>
+    <button class="btn btn-primary load-translations" @click="loadTranslations">Load Translations</button>
+    <button class="btn btn-primary clear-translations" @click="clearTranslations">Clear Translations</button>
     </div>
     <br>
     <div class="text-center"><h4>Translation History:</h4></div>
     <div class="saved-translations">
-        <textarea class="form-control saved-translations" placeholder="Saved Translations" v-model="savedTranslations"></textarea>  
-    
-    
-    
+        <textarea class="form-control saved-translations" placeholder="Saved Translations" v-model="savedTranslations"></textarea>
+
+
+
     <div class="text-center"><h4>Transcription Example:</h4></div>
     <div class="Transcription">
     <button class="btn btn-primary" type="button" @click="ToggleMic">Speech To Text</button>
@@ -40,10 +42,6 @@
   </div>
   </div>
   </div>
-  
-
-
-
 </template>
 
 <script setup>
@@ -157,15 +155,25 @@ export default {
         this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       }
     },
+    loadTranslations() {
+      this.savedTranslations = this.$store.getters.getSavedTranslations;
+    },
+    clearTranslations() {
+      this.savedTranslations = null;
+      this.$store.commit('setOrUpdateTranslations', this.savedTranslations);
+      this.$store.dispatch('saveTripToDB');
+    },
     saveTranslation() {
     // Find the language names corresponding to sourceLanguage and targetLanguage codes
     const sourceLanguageName = this.languages.find(lang => lang.code === this.sourceLanguage)?.name || 'Unknown';
     const targetLanguageName = this.languages.find(lang => lang.code === this.targetLanguage)?.name || 'Unknown';
-    
+
     // Add the source and target language names along with input text and translated text to savedTranslations
     this.savedTranslations += `Source Language: ${sourceLanguageName} \nInput Text: ${this.inputText}\n`;
     this.savedTranslations += `Target Language: ${targetLanguageName} \nTranslated Text: ${this.translatedText}\n`;
     this.savedTranslations += '---------------------------------------------\n';
+    this.store.commit('setOrUpdateTranslations', this.savedTranslations);
+    this.$store.dispatch('saveTripToDB');
   }
   },
   //Mounting fetchLanguages to populate lists on page load

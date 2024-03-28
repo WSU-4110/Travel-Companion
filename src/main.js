@@ -58,6 +58,9 @@ const store = createStore({
     },
     getCurrentTrip(state) {
       return state.currentTrip;
+    },
+    getSavedTranslations(state) {
+      return state.currentTrip.translationText;
     }
   },
   mutations: {
@@ -92,11 +95,17 @@ const store = createStore({
     },
     setOrUpdateCurrentTrip(state, trip) {
       state.currentTrip = trip;
+    },
+    setOrUpdateTranslations(state, translations) {
+      state.currentTrip.savedTranslations = translations;
     }
   },
   actions: {
     async refreshAllTrips(context) {
       context.state.allTrips = await dynamoAdapter.getAllTrips();
+    },
+    saveTripToDB(context) {
+      dynamoAdapter.updateTrip(context.state.currentTrip);
     },
     resetStore(context) {
       context.state.allTrips = null;
