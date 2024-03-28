@@ -25,13 +25,12 @@
     <!-- Chatbox style textbox and button -->
     <div class="d-grid gap-2">
     <button class="btn btn-primary save-translation" @click="saveTranslation">Save Translation</button>
+    <button class="btn btn-primary save-translation" @click="loadTranslations">Load Translations</button>
     </div>
     <br>
     <div class="text-center"><h4>Translation History:</h4></div>
     <div class="saved-translations">
         <textarea class="form-control saved-translations" placeholder="Saved Translations" v-model="savedTranslations"></textarea>  
-    
-    
     
     <div class="text-center"><h4>Transcription Example:</h4></div>
     <div class="Transcription">
@@ -40,9 +39,6 @@
   </div>
   </div>
   </div>
-  
-
-
 
 </template>
 
@@ -166,7 +162,11 @@ export default {
     this.savedTranslations += `Source Language: ${sourceLanguageName} \nInput Text: ${this.inputText}\n`;
     this.savedTranslations += `Target Language: ${targetLanguageName} \nTranslated Text: ${this.translatedText}\n`;
     this.savedTranslations += '---------------------------------------------\n';
-  }
+    this.$store.commit('setOrUpdateSavedTranslations', `${this.savedTranslations}`); 
+  },
+    loadTranslations() {
+      this.savedTranslations = this.$store.getters.getSavedTranslations;
+    }
   },
   //Mounting fetchLanguages to populate lists on page load
   mounted() {

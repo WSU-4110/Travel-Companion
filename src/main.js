@@ -25,7 +25,10 @@ const store = createStore({
       alertStatus: null,
       alertMessage: '',
       allTrips: null,
-      currentTrip: null
+      currentTrip: null,
+      savedTranslations: '',
+      savedLocations: '',
+      savedItineary: '',
     }
   },
   getters: {
@@ -58,6 +61,9 @@ const store = createStore({
     },
     getCurrentTrip(state) {
       return state.currentTrip;
+    },
+    getSavedTranslations(state){
+      return state.savedTranslations;
     }
   },
   mutations: {
@@ -92,6 +98,10 @@ const store = createStore({
     },
     setOrUpdateCurrentTrip(state, trip) {
       state.currentTrip = trip;
+    },
+    setOrUpdateSavedTranslations(state, translations) {
+      state.savedTranslations = translations;
+      console.log(state.savedTrnslations);
     }
   },
   actions: {
