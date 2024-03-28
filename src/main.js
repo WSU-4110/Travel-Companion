@@ -62,6 +62,12 @@ const store = createStore({
     getSavedTranslations(state) {
       return state.currentTrip.savedTranslations ? state.currentTrip.savedTranslations : null;
     },
+    getSavedLocations(state) {
+      return state.currentTrip.savedLocations ? state.currentTrip.currentLocations : null;
+    },
+    getSavedItineraries(state) {
+      return state.currentTrip.savedItineraries ? state.currentTrip.savedItineraries : null;
+    },
     isTripSelected(state) {
       return state.currentTrip !== null;
     }
@@ -101,6 +107,12 @@ const store = createStore({
     },
     setOrUpdateTranslations(state, translations) {
       state.currentTrip.savedTranslations = translations;
+    },
+    setOrUpdateLocations(state, locations) {
+      state.currentTrip.savedLocations = locations;
+    },
+    setOrUpdateItineraries(state, itineraries) {
+      state.currentTrip.savedItineraries = itineraries;
     }
   },
   actions: {
