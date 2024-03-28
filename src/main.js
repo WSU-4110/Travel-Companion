@@ -60,7 +60,10 @@ const store = createStore({
       return state.currentTrip;
     },
     getSavedTranslations(state) {
-      return state.currentTrip.translationText;
+      return state.currentTrip.savedTranslations ? state.currentTrip.savedTranslations : null;
+    },
+    isTripSelected(state) {
+      return state.currentTrip !== null;
     }
   },
   mutations: {
