@@ -29,7 +29,12 @@
         <textarea class="form-control saved-translations" placeholder="Saved Translations" v-model="savedTranslations"></textarea>
         <br>
         <div class="d-grid gap-2">
-          <button class="btn btn-primary clear-translations" @click="clearTranslations" :disabled="!tripSelected">Clear Translations</button>
+          <ConfirmDelete
+            targetType="Translations"
+            :deleteCallback="clearTranslations"
+            :genericDelete="true"
+            :disabled="!tripSelected"
+          />
         </div>
     <div class="text-center"><h4>Transcription Example:</h4></div>
     <div class="Transcription">
@@ -88,8 +93,10 @@ const ToggleMic = () => {
 <script>
 import axios from 'axios';
 import store from '@/main.js';
+import ConfirmDelete from '@/components/ConfirmDelete.vue';
 
 export default {
+  components: {ConfirmDelete},
   data() {
     return {
       inputText: '',

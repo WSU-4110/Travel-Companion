@@ -24,59 +24,43 @@
       </span>
       <span v-if="currentTrip" class="ms-2">Last modified: {{ tripTime }}</span>
     </div>
-    <button
+    <ConfirmDelete
       v-if="currentTrip"
-      class="btn btn-danger ms-2"
-      data-bs-toggle="modal"
-      data-bs-target="#deleteModal">
-      Delete Trip
-    </button>
+      :targetName="currentTrip.tripName"
+      targetType="Trip"
+      :deleteCallback="deleteCurrentTrip"
+    />
   </div>
   <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="createModalLabel">Create New Trip</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <h6>Enter new trip information:</h6>
-        <div class="form-group w-75">
-          <label for="inputName">Trip Name:</label>
-          <input v-model="newTripName" type="text" class="form-control" id="inputName" aria-describedby="tripName" placeholder="Enter trip name">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="createModalLabel">Create New Trip</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <h6>Enter new trip information:</h6>
+          <div class="form-group w-75">
+            <label for="inputName">Trip Name:</label>
+            <input v-model="newTripName" type="text" class="form-control" id="inputName" aria-describedby="tripName" placeholder="Enter trip name">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button @click="createNewTrip" type="button" class="btn btn-primary" data-bs-dismiss="modal">Create Trip</button>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button @click="createNewTrip" type="button" class="btn btn-primary" data-bs-dismiss="modal">Create Trip</button>
-      </div>
     </div>
   </div>
-</div>
-  <div v-if="currentTrip?.tripName" class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="deleteModalLabel">Delete Trip "{{ currentTrip.tripName }}"?</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Are you sure you want to delete trip "{{ currentTrip.tripName }}"? This action <b>is not reversable</b>.
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button @click="deleteCurrentTrip" type="button" class="btn btn-danger" data-bs-dismiss="modal">Delete Trip</button>
-      </div>
-    </div>
-  </div>
-</div>
 </template>
 
 <script>
 import { dynamoAdapter } from '@/main';
+import ConfirmDelete from '@/components/ConfirmDelete.vue'
 
 export default {
   name: 'TripSelector',
+  components: {ConfirmDelete},
   data () {
     return {
       newTripName: null
