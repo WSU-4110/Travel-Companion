@@ -43,7 +43,7 @@
   </div>
   </div>
   </div>
-  
+
 </template>
 
 <script setup>
@@ -176,6 +176,7 @@ export default {
         this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       }
       this.saveTranslation();
+    }
     },
     loadTranslations() {
       this.savedTranslations = this.$store.getters.getSavedTranslations;
