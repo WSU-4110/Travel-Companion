@@ -33,7 +33,7 @@
             targetType="Translations"
             :deleteCallback="clearTranslations"
             :genericDelete="true"
-            :disabled="!tripSelected"
+            :disabled="!tripSelected || !savedTranslations"
           />
         </div>
     <div class="text-center"><h4>Transcription Example:</h4></div>
