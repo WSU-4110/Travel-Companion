@@ -62,8 +62,17 @@ const store = createStore({
     getCurrentTrip(state) {
       return state.currentTrip;
     },
-    getSavedTranslations(state){
-      return state.savedTranslations;
+    getSavedTranslations(state) {
+      return state.currentTrip.savedTranslations ? state.currentTrip.savedTranslations : null;
+    },
+    getSavedLocations(state) {
+      return state.currentTrip.savedLocations ? state.currentTrip.currentLocations : null;
+    },
+    getSavedItineraries(state) {
+      return state.currentTrip.savedItineraries ? state.currentTrip.savedItineraries : null;
+    },
+    isTripSelected(state) {
+      return state.currentTrip !== null;
     }
   },
   mutations: {
@@ -99,14 +108,22 @@ const store = createStore({
     setOrUpdateCurrentTrip(state, trip) {
       state.currentTrip = trip;
     },
-    setOrUpdateSavedTranslations(state, translations) {
-      state.savedTranslations = translations;
-      console.log(state.savedTrnslations);
+    setOrUpdateTranslations(state, translations) {
+      state.currentTrip.savedTranslations = translations;
+    },
+    setOrUpdateLocations(state, locations) {
+      state.currentTrip.savedLocations = locations;
+    },
+    setOrUpdateItineraries(state, itineraries) {
+      state.currentTrip.savedItineraries = itineraries;
     }
   },
   actions: {
     async refreshAllTrips(context) {
       context.state.allTrips = await dynamoAdapter.getAllTrips();
+    },
+    saveTripToDB(context) {
+      dynamoAdapter.updateTrip(context.state.currentTrip);
     },
     resetStore(context) {
       context.state.allTrips = null;
