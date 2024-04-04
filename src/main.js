@@ -25,7 +25,10 @@ const store = createStore({
       alertStatus: null,
       alertMessage: '',
       allTrips: null,
-      currentTrip: null
+      currentTrip: null,
+      savedTranslations: '',
+      savedLocations: '',
+      savedItineary: '',
     }
   },
   getters: {
