@@ -84,7 +84,7 @@ export default class DatabaseAdapter {
       return null;
     }
 
-    return trips.map(trip => AWS.DynamoDB.Converter.unmarshall(trip));
+    return trips.map(trip => AWS.DynamoDB.Converter.unmarshall(trip)).reverse();
   }
 
   // returns whether the trip is valid or not
