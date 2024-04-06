@@ -9,9 +9,14 @@ import App from './App.vue'
 import router from './router'
 import DynamoAdapter from '@/api/databaseManager'
 import UserVerificationAdapter from '@/api/userVerification'
+import VuexPersistence from 'vuex-persist'
 
 const dynamoAdapter = new DynamoAdapter();
 const cognitoAdapter = new UserVerificationAdapter();
+
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+});
 
 const store = createStore({
   state () {
@@ -128,7 +133,8 @@ const store = createStore({
       context.state.username = null;
     }
   },
-  modules: {}
+  modules: {},
+  plugins: [vuexLocal.plugin]
 });
 
 const app = createApp(App);
