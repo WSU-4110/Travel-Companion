@@ -43,6 +43,7 @@
   </div>
   </div>
   </div>
+
 </template>
 
 <script setup>
@@ -144,6 +145,12 @@ export default {
       }
     },
     async translate() {
+      if(this.sourceLanguage == '' || this.targetLanguage == '')
+      {
+        this.$store.commit('setAlertStatus','alert-danger');
+        this.$store.commit('setAlertMessage',`Translation Error: Please select both a Source and Target Language`)
+      }
+      else{
       const options = {
         method: 'POST',
         url: 'https://deep-translate1.p.rapidapi.com/language/translate/v2',
@@ -168,8 +175,8 @@ export default {
         this.$store.commit('setAlertStatus', 'alert-danger');
         this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       }
-
       this.saveTranslation();
+    }
     },
     loadTranslations() {
       this.savedTranslations = this.$store.getters.getSavedTranslations;
