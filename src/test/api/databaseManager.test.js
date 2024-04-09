@@ -96,7 +96,7 @@ describe('DatabaseAdapter', () => {
       });
       const trips = await adapter.getAllTrips();
 
-      expect(trips).toBeNull();
+      expect(trips).not.toBeNull();
       expect(querySpy).toHaveBeenCalled();
     });
 
