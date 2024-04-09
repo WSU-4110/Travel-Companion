@@ -1,26 +1,35 @@
 <template>
-  <div class="container">
-    <h1>Welcome to the Itinerary Page</h1>
-    <p>Enter your destination and trip length below to get a personalized itinerary for your trip:</p>
-    <form @submit.prevent="handleSubmit">
-      <label for="destination">Enter destination:</label>
-      <input type="text" id="destination" v-model="destination" required>
+  <div>
+    <h1 class="header">Welcome to the Itinerary Page</h1>
+    <div class="container">
+      <p class="prompt">Enter your destination and trip length below to get a personalized itinerary for your trip:</p>
+      <form @submit.prevent="handleSubmit" class="form">
+        <div class="form-group">
+          <label for="destination" class="input-label">Enter destination:</label>
+          <input type="text" id="destination" v-model="destination" required class="input-field">
+        </div>
 
-      <label for="tripLength">Enter trip length (days):</label>
-      <input type="number" id="tripLength" v-model.number="tripLength" required min="1">
-
-      <button type="submit">Generate Itinerary</button>
-    </form>
-    <div id="itinerary" v-if="itinerary">
-      <p>{{ itinerary }}</p>
-      <button @click="generateDifferentItinerary">Generate a Different Itinerary</button>
-      <button @click="saveItinerary">Save Itinerary</button>
-    </div>
-    <div v-else>
-      <p>No itinerary available yet. Please enter a destination and trip length.</p>
+        <div class="form-group">
+          <label for="tripLength" class="input-label">Enter trip length (days):</label>
+          <input type="number" id="tripLength" v-model.number="tripLength" required min="1" class="input-field">
+        </div>
+        
+        <button type="submit">Generate Itinerary</button><br><br>
+      </form>
+      <div id="itinerary" v-if="itinerary">
+        <div v-html="formattedItinerary" class="itinerary"></div>
+        <div class="button-container">
+          <br><button @click="generateDifferentItinerary">Generate a Different Itinerary</button>
+          <button @click="saveItinerary">Save Itinerary</button>
+        </div>
+      </div>
+      <div v-else>
+        <p>No itinerary available yet. Please enter a destination and trip length.</p>
+      </div>
     </div>
   </div>
 </template>
+
 
 <script>
 import store from '@/main.js'
@@ -32,6 +41,11 @@ export default {
       tripLength: 1,
       itinerary: '',
       generatingNewItinerary: false
+    }
+  },
+  computed: {
+    formattedItinerary() {
+      return this.itinerary.result.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
     }
   },
   methods: {
@@ -86,16 +100,11 @@ export default {
         console.error(error);
       }
     },
-    processResponse(response) {
-      return response.json().then(data => {
-        return data.choices[0].text.trim();
-      });
-    },
     displayItinerary(itinerary) {
       this.itinerary = itinerary;
       this.generatingNewItinerary = false; // reset flag for generating new itinerary
     },
-       generateDifferentItinerary() {
+    generateDifferentItinerary() {
       this.handleSubmit(); // handleSubmit to handle generating a different itinerary
     },
     saveItinerary() {
@@ -108,10 +117,31 @@ export default {
 
 <style scoped>
 .container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
+  text-align: left;
+}
+
+.header {
+  text-align: center;
+}
+
+.prompt {
+  text-align: center;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-field {
+  margin-bottom: 15px;
+}
+
+.button-container button {
+  margin-right: 10px;
 }
 </style>
