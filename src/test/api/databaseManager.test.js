@@ -81,7 +81,7 @@ describe('DatabaseAdapter', () => {
 
       const trips = await adapter.getAllTrips();
 
-      expect(trips).toEqual(mockItems);
+      expect(trips).toEqual(mockItems.reverse());
       expect(querySpy).toHaveBeenCalledWith(expect.objectContaining({
         TableName: "UserTrips", KeyConditionExpression: 'username = :username',
         ExpressionAttributeValues: {
