@@ -41,8 +41,8 @@ export default class DatabaseAdapter {
 
   // allows the user to update an existing trip
   updateTrip(trip) {
-    deleteTrip(trip);
-    saveTrip(trip);
+    this.deleteTrip(trip);
+    this.saveTrip(trip);
   }
 
   // allows the user to delete an existing trip
@@ -84,7 +84,7 @@ export default class DatabaseAdapter {
       return null;
     }
 
-    return trips.map(trip => AWS.DynamoDB.Converter.unmarshall(trip));
+    return trips.map(trip => AWS.DynamoDB.Converter.unmarshall(trip)).reverse();
   }
 
   // returns whether the trip is valid or not
