@@ -101,4 +101,31 @@ describe('CurrencyExchange', () => {
     expect(mockStore.commit.getCall(1).args[1]).to.equal('Please select starting and ending currencies, and enter an amount to convert.');
   });
 
+  it('accurately calculates the converted amount based on the conversion rate', async () => {
+    const axiosGetStub = sinon.stub(axios, 'get').resolves({
+      data: {
+        rates: {
+          USD: 1.2,
+          EUR: 1.5
+        }
+      }
+    });
+  
+    wrapper.setData({
+      startingCurrency: 'USD',
+      endingCurrency: 'EUR',
+      amount: 100
+    });
+  
+    await wrapper.vm.convertCurrency();
+  
+    // Expected converted amount: amount * conversion rate
+    const expectedConvertedAmount = 100 * 1.5;
+  
+    // Assert that the converted amount matches the expected value
+    expect(wrapper.vm.convertedAmount).to.equal(expectedConvertedAmount.toFixed(2));
+  
+    axios.get.restore();
+  });
+
 });
