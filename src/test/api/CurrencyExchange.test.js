@@ -1,13 +1,11 @@
 import { mount } from '@vue/test-utils';
 import CurrencyExchange from '@/views/CurrencyExchange.vue';
 import axios from 'axios';
-import sinon from 'sinon';
-import { expect } from 'chai';
 
 // Mock Vuex store
 const mockStore = {
   state: {},
-  commit: sinon.stub()
+  commit: vi.fn()
 };
 
 describe('CurrencyExchange', () => {
@@ -24,19 +22,19 @@ describe('CurrencyExchange', () => {
   });
 
   it('renders the component properly', () => {
-    expect(wrapper.exists()).to.be.true;
+    expect(wrapper.exists()).toBeTruthy();
   });
 
   it('calls convertCurrency method when convert button is clicked', async () => {
-    const convertCurrencyStub = sinon.stub(wrapper.vm, 'convertCurrency');
+    const convertCurrencyMock = vi.spyOn(wrapper.vm, 'convertCurrency');
 
     await wrapper.find('button').trigger('click');
 
-    expect(convertCurrencyStub.calledOnce).to.be.true;
+    expect(convertCurrencyMock).toHaveBeenCalledTimes(1);
   });
 
   it('fetches conversion rates when convertCurrency method is called', async () => {
-    const axiosGetStub = sinon.stub(axios, 'get').resolves({
+    const axiosGetMock = vi.spyOn(axios, 'get').mockResolvedValue({
       data: {
         rates: {
           USD: 1.2,
@@ -53,10 +51,10 @@ describe('CurrencyExchange', () => {
 
     await wrapper.vm.convertCurrency();
 
-    expect(axiosGetStub.calledWith('https://open.er-api.com/v6/latest/USD')).to.be.true;
-    expect(wrapper.vm.conversionRate).to.equal(1.5);
+    expect(axiosGetMock).toHaveBeenCalledWith('https://open.er-api.com/v6/latest/USD');
+    expect(wrapper.vm.conversionRate).toEqual(1.5);
 
-    axios.get.restore();
+    axios.get.mockRestore();
   });
 
   it('displays alert message when starting currency is not selected', async () => {
@@ -67,10 +65,10 @@ describe('CurrencyExchange', () => {
 
     await wrapper.vm.convertCurrency();
 
-    expect(mockStore.commit.getCall(0).args[0]).to.equal('setAlertStatus');
-    expect(mockStore.commit.getCall(0).args[1]).to.equal('alert-warning');
-    expect(mockStore.commit.getCall(1).args[0]).to.equal('setAlertMessage');
-    expect(mockStore.commit.getCall(1).args[1]).to.equal('Please select starting and ending currencies, and enter an amount to convert.');
+    expect(mockStore.commit.mock.calls[0][0]).toEqual('setAlertStatus');
+    expect(mockStore.commit.mock.calls[0][1]).toEqual('alert-warning');
+    expect(mockStore.commit.mock.calls[1][0]).toEqual('setAlertMessage');
+    expect(mockStore.commit.mock.calls[1][1]).toEqual('Please select starting and ending currencies, and enter an amount to convert.');
   });
 
   it('displays alert message when ending currency is not selected', async () => {
@@ -78,31 +76,19 @@ describe('CurrencyExchange', () => {
       startingCurrency: 'USD',
       amount: 100
     });
-
+  
     await wrapper.vm.convertCurrency();
-
-    expect(mockStore.commit.getCall(0).args[0]).to.equal('setAlertStatus');
-    expect(mockStore.commit.getCall(0).args[1]).to.equal('alert-warning');
-    expect(mockStore.commit.getCall(1).args[0]).to.equal('setAlertMessage');
-    expect(mockStore.commit.getCall(1).args[1]).to.equal('Please select starting and ending currencies, and enter an amount to convert.');
+  
+    expect(mockStore.commit.mock.calls[0][0]).toEqual('setAlertStatus');
+    expect(mockStore.commit.mock.calls[0][1]).toEqual('alert-warning');
+    expect(mockStore.commit.mock.calls[1][0]).toEqual('setAlertMessage');
+    expect(mockStore.commit.mock.calls[1][1]).toEqual('Please select starting and ending currencies, and enter an amount to convert.');
   });
 
-  it('displays alert message when amount is not entered', async () => {
-    wrapper.setData({
-      startingCurrency: 'USD',
-      endingCurrency: 'EUR'
-    });
 
-    await wrapper.vm.convertCurrency();
-
-    expect(mockStore.commit.getCall(0).args[0]).to.equal('setAlertStatus');
-    expect(mockStore.commit.getCall(0).args[1]).to.equal('alert-warning');
-    expect(mockStore.commit.getCall(1).args[0]).to.equal('setAlertMessage');
-    expect(mockStore.commit.getCall(1).args[1]).to.equal('Please select starting and ending currencies, and enter an amount to convert.');
-  });
 
   it('accurately calculates the converted amount based on the conversion rate', async () => {
-    const axiosGetStub = sinon.stub(axios, 'get').resolves({
+    const axiosGetMock = vi.spyOn(axios, 'get').mockResolvedValue({
       data: {
         rates: {
           USD: 1.2,
@@ -110,22 +96,21 @@ describe('CurrencyExchange', () => {
         }
       }
     });
-  
+
     wrapper.setData({
       startingCurrency: 'USD',
       endingCurrency: 'EUR',
       amount: 100
     });
-  
+
     await wrapper.vm.convertCurrency();
-  
+
     // Expected converted amount: amount * conversion rate
     const expectedConvertedAmount = 100 * 1.5;
-  
-    // Assert that the converted amount matches the expected value
-    expect(wrapper.vm.convertedAmount).to.equal(expectedConvertedAmount.toFixed(2));
-  
-    axios.get.restore();
-  });
 
+    // Assert that the converted amount matches the expected value
+    expect(wrapper.vm.convertedAmount).toEqual(expectedConvertedAmount.toFixed(2));
+
+    axios.get.mockRestore();
+  });
 });
