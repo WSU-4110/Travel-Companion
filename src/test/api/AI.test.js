@@ -1,3 +1,5 @@
+//test
+
 import axios from 'axios';
 import AI from '@/views/AI.vue';
 
@@ -70,3 +72,5 @@ describe('AI', () => {
     expect(aiInstance.$emit).toHaveBeenCalledWith('save-itinerary', mockItinerary);
   });  
 });
+
+//all tests successful

@@ -31,6 +31,9 @@
 </template>
 
 <script>
+
+//switched from just methods to class
+
 import store from '@/main.js'
 import axios from 'axios'
 
