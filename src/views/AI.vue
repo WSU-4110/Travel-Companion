@@ -30,87 +30,87 @@
   </div>
 </template>
 
-
 <script>
 import store from '@/main.js'
 import axios from 'axios'
-export default {
-  data() {
-    return {
-      destination: '',
-      tripLength: 1,
-      itinerary: '',
-      generatingNewItinerary: false
-    }
-  },
-  computed: {
-    formattedItinerary() {
-      return this.itinerary.result.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
-    }
-  },
-  methods: {
-    async suggestItinerary(destination, tripLength) {
-      try {
-        const response = await axios.request({
-          method: 'POST',
-          url: 'https://open-ai21.p.rapidapi.com/conversationgpt35',
-          headers: {
-            'content-type': 'application/json',
-            'X-RapidAPI-Key': store.getters.getAiApiKey,
-            'X-RapidAPI-Host': 'open-ai21.p.rapidapi.com'
-          },
-          data: {
-            messages: [
-              {
-                role: 'user',
-                content: `Suggest an itinerary for a ${tripLength}-day trip to ${destination}.`
-              }
-            ],
-            web_access: false,
-            system_prompt: '',
-            temperature: 0.9,
-            top_k: 5,
-            top_p: 0.9,
-            max_tokens: 256
-          }
-        });
-        return response.data;
-      } catch (error) {
-        console.error('Error:', error);
-        throw new Error('Sorry, something went wrong. Please try again later.');
-      }
-    },
-    async handleSubmit() {
-      if (this.itinerary && !this.generatingNewItinerary) {
-        if (confirm("Are you sure you don't want to save your current itinerary? Your current option will be lost.")) {
-          this.generatingNewItinerary = true;
-          await this.fetchAndDisplayItinerary();
+
+export default class AI {
+  constructor() {
+    this.destination = '';
+    this.tripLength = 1;
+    this.itinerary = '';
+    this.generatingNewItinerary = false;
+  }
+
+  get formattedItinerary() {
+    return this.itinerary.result.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
+  }
+
+  async suggestItinerary(destination, tripLength) {
+    try {
+      const response = await axios.request({
+        method: 'POST',
+        url: 'https://open-ai21.p.rapidapi.com/conversationgpt35',
+        headers: {
+          'content-type': 'application/json',
+          'X-RapidAPI-Key': store.getters.getAiApiKey,
+          'X-RapidAPI-Host': 'open-ai21.p.rapidapi.com'
+        },
+        data: {
+          messages: [
+            {
+              role: 'user',
+              content: `Suggest an itinerary for a ${tripLength}-day trip to ${destination}.`
+            }
+          ],
+          web_access: false,
+          system_prompt: '',
+          temperature: 0.9,
+          top_k: 5,
+          top_p: 0.9,
+          max_tokens: 256
         }
-      } else {
-        this.generatingNewItinerary = true;
-        await this.fetchAndDisplayItinerary();
-      }
-    },
-    async fetchAndDisplayItinerary() {
-      try {
-        this.itinerary = null; // Reset itinerary
-        const itinerary = await this.suggestItinerary(this.destination, this.tripLength);
-        this.displayItinerary(itinerary);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    displayItinerary(itinerary) {
-      this.itinerary = itinerary;
-      this.generatingNewItinerary = false; // reset flag for generating new itinerary
-    },
-    generateDifferentItinerary() {
-      this.handleSubmit(); // handleSubmit to handle generating a different itinerary
-    },
-    saveItinerary() {
-      // event to pass the itinerary data to the parent component
-      this.$emit('save-itinerary', this.itinerary);
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error:', error);
+      throw new Error('Sorry, something went wrong. Please try again later.');
     }
+  }
+
+  async handleSubmit() {
+    if (!this.generatingNewItinerary) {
+      this.generatingNewItinerary = true;
+      try {
+        await this.fetchAndDisplayItinerary();
+      } finally {
+        this.generatingNewItinerary = false;
+      }
+    }
+  }
+
+  async fetchAndDisplayItinerary() {
+    try {
+      this.itinerary = null; // Reset itinerary
+      const itinerary = await this.suggestItinerary(this.destination, this.tripLength);
+      this.displayItinerary(itinerary);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  displayItinerary(itinerary) {
+    this.itinerary = itinerary;
+    this.generatingNewItinerary = false; // reset flag for generating new itinerary
+  }
+
+  generateDifferentItinerary() {
+    this.handleSubmit(); // handleSubmit to handle generating a different itinerary
+  }
+
+  saveItinerary() {
+    // event to pass the itinerary data to the parent component
+    this.$emit('save-itinerary', this.itinerary);
   }
 }
 </script>
