@@ -42,6 +42,18 @@
     import axios from 'axios'
     // Import MapView component
     import MapView from '@/components/MapView.vue'
+
+    export function convert_kelvin_to_celsius(kelvin) { return (kelvin - 273.15).toFixed(2); } //OpenWeatherMap's API typically outputs in Kelvin, so we have to convert it. Here's the functions containing the formulas to do so
+    export function convert_kelvin_to_fahrenheit(kelvin) { return ((kelvin - 273.15) * 1.8 + 32).toFixed(2); }
+    export function convert_mps_to_mph(mps) { const mph = (mps * 2.23694).toFixed(2); return mph; } //converting the default meters/second to miles/hour
+    // Method to get wind direction letter based on degrees
+    export function getWindDirectionLetter(degrees) 
+    {
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
+    const index = Math.round(degrees / 45) % 8;
+    return directions[index];
+    }
+
     export default
         {
             components: {
@@ -72,6 +84,7 @@
                     const index = Math.round(degrees / 45) % 8;
                     return directions[index];
                 },
+
 
                 async getWeather() {
                     if (!this.city) return;
