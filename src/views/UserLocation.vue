@@ -4,13 +4,17 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <!-- Form for entering address -->
-                <form @submit.prevent="updateMap(address); saveLocation(address)" class="mt-4">
+                <form @submit.prevent="updateMap(address)" class="mt-4">
                     <div class="input-group mb-3">
                         <!-- Input field for address -->
                         <input type="text" class="form-control" placeholder="Enter an address" v-model="address" />
                         <!-- Locator button to get current location -->
-                        <button @click="LocatorButtonPressed" class="btn btn-outline-secondary" type="button">
-                            Get Location
+                        <button
+                          @click="LocatorButtonPressed"
+                          class="btn btn-outline-secondary"
+                          type="button">
+                          <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Get My Location
                         </button>
                     </div>
                     <!-- Search button to search for entered address -->
@@ -18,8 +22,12 @@
                 </form>
                 <!-- MapView component to display the map -->
                 <MapView ref="mapView" />
-                <button @click="clearLocations" class="btn btn-danger mt-3">Clear Saved Locations</button>
-            </div>
+                <ConfirmDelete
+                  targetType="Locations"
+                  :deleteCallback="clearLocations"
+                  :genericDelete="true"
+                  :disabled="!tripSelected || !savedLocations"
+                />            </div>
         </div>
         <!-- Display box for saved locations -->
         <div class="row justify-content-center mt-4">
@@ -36,10 +44,12 @@
     import axios from 'axios'
     // Import MapView component
     import MapView from '@/components/MapView.vue'
+    import ConfirmDelete from '@/components/ConfirmDelete.vue'
 
     export default {
         components: {
-            MapView
+            MapView,
+            ConfirmDelete
         },
         data() {
             return {
@@ -123,13 +133,11 @@
                         error => {
                             this.$store.commit('setAlertStatus', 'alert-danger');
                             this.$store.commit('setAlertMessage', error.message);
-                            this.spinner = false;
                         }
                     );
                 } else {
                     this.$store.commit('setAlertStatus', 'alert-danger');
                     this.$store.commit('setAlertMessage', 'Your browser does not support geolocation API');
-                    this.spinner = false;
                 }
             },
             // Method to get address from coordinates
@@ -144,24 +152,30 @@
                     } else {
                         // Set address to formatted address from API response
                         this.address = response.data.results[0].formatted_address;
+                        this.updateMap(this.address);
                     }
+                    this.spinner = false;
                 } catch (error) {
                     console.log(error.message);
                     this.$store.commit('setAlertStatus', 'alert-danger');
                     this.$store.commit('setAlertMessage', 'Error: Failed to fetch address. Please try again later');
+                    this.spinner = false;
                 }
             },
             // Method to update map with provided address
             updateMap(address) {
                 this.$refs.mapView.updateMap(address);
+                this.saveLocation(address);
             },
             // Method to save the location
             saveLocation() {
                 let newSavedLocations = this.savedLocations;
-                if (this.latitude !== null && this.longitude !== null) {
+                if (this.address) {
                 // Find the language names corresponding to sourceLanguage and targetLanguage codes
                 newSavedLocations += `Address: ${this.address}\n`;
-                newSavedLocations += `Latitude: ${this.latitude} \nLongitude: ${this.longitude}\n`;
+                if (this.latitude && this.longitude) {
+                  newSavedLocations += `Latitude: ${this.latitude} \nLongitude: ${this.longitude}\n`;
+                }
                 newSavedLocations += '---------------------------------------------\n';
                 this.savedLocationsText += newSavedLocations;
                 this.$root.$emit('locationSaved', {
@@ -169,15 +183,12 @@
                         latitude: this.latitude,
                         longitude: this.longitude
                     });
-                if (this.tripSelected) {
-                    this.$store.commit('setOrUpdateLocations',newSavedLocations);
-                    this.$store.dispatch('saveTripToDB');
-                    console.log(newSavedLocations)
-                }
-                }
-                else {
-                    console.error("Latitude and longitude are not available.");
-                }
+                  }
+                  if (this.tripSelected) {
+                      this.$store.commit('setOrUpdateLocations',newSavedLocations);
+                      this.$store.dispatch('saveTripToDB');
+                      console.log(newSavedLocations)
+                  }
             },
             loadTranslations() {
                 this.savedLocationsText = this.$store.getters.getSavedLocations;
