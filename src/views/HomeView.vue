@@ -67,11 +67,15 @@ export default {
         .replace(/^\n/, '');
     },
     recentLocations() {
-      // if (!this.$store.getters.getCurrentTrip || !this.$store.getters.getSavedLocations) {
-      //   return "No saved locations for trip";
-      // }
+      if (!this.$store.getters.getCurrentTrip || !this.$store.getters.getSavedLocations) {
+        return "No saved locations for trip";
+      }
 
-      return "There are no saved locations at the moment, so here is some filler text to keep you gremlins satisfied\n\n\n\n"
+      return this.$store.getters.getSavedLocations
+        .split('---------------------------------------------')
+        .slice(-3)
+        .join('---------------------------------------------')
+        .replace(/^\n/, '');
     },
     recentItineraries() {
       // if (!this.$store.getters.getCurrentTrip || !this.$store.getters.getSavedItineraries) {

@@ -18,8 +18,7 @@
                 </form>
                 <!-- MapView component to display the map -->
                 <MapView ref="mapView" />
-                <!-- Button to save location to the current trip -->
-                <button @click="saveLocationToTrip" class="btn btn-success mt-3">Save Location to Current Trip</button>
+                <button @click="clearLocations" class="btn btn-danger mt-3">Clear Saved Locations</button>
             </div>
         </div>
         <!-- Display box for saved locations -->
@@ -52,12 +51,21 @@
                 // Loading spinner flag
                 spinner: false,
                 // Variable to store saved locations
-                savedLocations: "" // Initialize savedLocations variable
             }
         },
+        computed:{
+        savedLocations(){
+            if (!this.$store.getters.getCurrentTrip) {
+            return null;
+            }
+
+            return this.$store.getters.getSavedLocations ? this.$store.getters.getSavedLocations : '';
+        },
+        tripSelected() {
+            return this.$store.getters.isTripSelected;
+    }
+        },
         methods: {
-
-
         async fetchLocation() {
             try {
                 // Check if geolocation is supported
@@ -149,40 +157,37 @@
             },
             // Method to save the location
             saveLocation() {
+                let newSavedLocations = this.savedLocations;
                 if (this.latitude !== null && this.longitude !== null) {
-                    this.savedLocations += `Address: ${this.address}\n`;
-                    this.savedLocations += `Latitude: ${this.latitude} \nLongitude: ${this.longitude}\n`;
-                    this.savedLocations += '---------------------------------------------\n';
-
-                    // Emit an event to indicate that a location has been saved
-                    this.$root.$emit('locationSaved', {
+                // Find the language names corresponding to sourceLanguage and targetLanguage codes
+                newSavedLocations += `Address: ${this.address}\n`;
+                newSavedLocations += `Latitude: ${this.latitude} \nLongitude: ${this.longitude}\n`;
+                newSavedLocations += '---------------------------------------------\n';
+                this.savedLocationsText += newSavedLocations;
+                this.$root.$emit('locationSaved', {
                         address: this.address,
                         latitude: this.latitude,
                         longitude: this.longitude
                     });
-                } else {
+                if (this.tripSelected) {
+                    this.$store.commit('setOrUpdateLocations',newSavedLocations);
+                    this.$store.dispatch('saveTripToDB');
+                    console.log(newSavedLocations)
+                }
+                }
+                else {
                     console.error("Latitude and longitude are not available.");
                 }
             },
-            // Method to save location to the current trip
-            saveLocationToTrip() {
-                // Get the current trip from TripSelector component
-                const currentTrip = this.$root.$refs.tripSelector.currentTrip;
-                if (currentTrip) {
-                    // Construct location object
-                    const location = {
-                        address: this.address,
-                        latitude: this.latitude,
-                        longitude: this.longitude
-                    };
-                    // Push location to the current trip's locations array
-                    currentTrip.locations.push(location);
-                    
-                } else {
-                    console.error("No current trip selected.");
-                    // Handle the case when no trip is selected
+            loadTranslations() {
+                this.savedLocationsText = this.$store.getters.getSavedLocations;
+            },
+            clearLocations() {
+                if (this.$store.getters.isTripSelected) {
+                    this.$store.commit('setOrUpdateLocations', null);
+                    this.$store.dispatch('saveTripToDB');
                 }
-            }
+            },
         }
     };
 </script>
