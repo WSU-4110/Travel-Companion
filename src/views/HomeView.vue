@@ -78,11 +78,11 @@ export default {
         .replace(/^\n/, '');
     },
     recentItineraries() {
-      // if (!this.$store.getters.getCurrentTrip || !this.$store.getters.getSavedItineraries) {
-      //   return "No saved itineraries for trip";
-      // }
+      if (!this.$store.getters.getCurrentTrip || !this.$store.getters.getSavedItineraries) {
+        return "No saved itineraries for trip";
+      }
 
-      return "There are no saved itineraries at the moment, so here is some filler text to keep you gremlins satisfied \n\n\n\n";
+      return this.$store.getters.getSavedItineraries;
     }
   }
 }

@@ -37,8 +37,12 @@ pre {
   border-radius: 12px;
   padding: 1rem;
   white-space: pre-wrap;
+  word-wrap: break-word;
   font-family: inherit;
-  font-size: inherit
+  font-size: inherit;
+  /* Allow HTML formatting */
+  overflow: auto;
+  max-width: 100%;
 }
 </style>
 
