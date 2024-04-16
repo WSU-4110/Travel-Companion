@@ -15,6 +15,7 @@
                     Get Weather
                 </button>
               </div>
+              <button @click="updateMap2" type="button" class="btn btn-primary">Load Saved City</button>
 </form>
         </div>
 
@@ -35,15 +36,16 @@
                 <p class="location-info"><b>Cloudiness:</b> {{ clouds_percent }}%</p> <!-- Display cloud coverage -->
                 <p></p>
                 <p>Weather provided by OpenWeather</p>
+                
             </div>
             <div class="weather-info" v-if="show_error_message">
                 <p>No weather data found for {{ city }}</p> <!-- Error Handling -->
             </div>
-
             <!-- MapView component to display the map -->
             <div class="map-container">
                 <MapView ref="mapView" />
             </div>
+            
         </div>
     </div>
 </template>
@@ -114,14 +116,19 @@
                     const index = Math.round(degrees / 45) % 8;
                     return directions[index];
                 },
-
-
+                updateMap2() {
+                this.city = this.$store.getters.getSavedCity;
+                this.getWeather();
+                },
+                updateMap(city) {
+                this.$refs.mapView.updateMap(city);
+                },
                 async getWeather()
                 {
                     this.spinner = true;
                     if (!this.city) return;
                     try {
-
+                        this.updateMap(this.city);
                         const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=${this.$store.getters.getWeatherApiKey}`); //Calling the API
                         const data = await res.json();
                         console.log(data.weather[0].icon); // Log the icon code received from the API response

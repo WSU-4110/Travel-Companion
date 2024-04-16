@@ -61,6 +61,7 @@
                 // Loading spinner flag
                 spinner: false,
                 // Variable to store saved locations
+                savedCity: ''
             }
         },
         computed:{
@@ -145,6 +146,7 @@
                 try {
                     // Make API request to geocode coordinates
                     const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${this.$store.getters.getLocationApiKey}`);
+                    this.savedCity = response.data.results[5].formatted_address;
                     if (response.data.error_message) {
                         console.log(response.data.error_message);
                         this.$store.commit('setAlertStatus', 'alert-danger');
@@ -185,6 +187,7 @@
                     });
                   }
                   if (this.tripSelected) {
+                      this.$store.commit('setOrUpdateCity' , this.savedCity)
                       this.$store.commit('setOrUpdateLocations',newSavedLocations);
                       this.$store.dispatch('saveTripToDB');
                       console.log(newSavedLocations)
