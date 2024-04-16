@@ -17,7 +17,10 @@
     </div>
     <br>
     <div class="d-grid gap-2">
-      <button class="btn btn-primary" type="button" @click="translate">Translate</button>
+      <button class="btn btn-primary" type="button" @click="translate">
+        <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Translate
+      </button>
       <br>
     </div>
     <textarea class="form-control translated-text" v-model="translatedText" placeholder="Translated text" readonly></textarea>
@@ -55,6 +58,7 @@ export default {
       targetLanguage: 'ES',
       translatedText: '',
       languages: [],
+      spinner: false
     };
   },
   computed: {
@@ -93,8 +97,10 @@ export default {
       } catch (error) {
         console.error(error);
       }
+
     },
     async translate() {
+      this.spinner = true;
       if(this.sourceLanguage == '' || this.targetLanguage == '')
       {
         this.$store.commit('setAlertStatus','alert-danger');
@@ -126,6 +132,7 @@ export default {
         this.$store.commit('setAlertMessage', `Translation error: ${error}`);
       }
       this.saveTranslation();
+      this.spinner = false;
     }
     },
     loadTranslations() {
