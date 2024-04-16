@@ -13,11 +13,11 @@
           <label for="tripLength" class="input-label">Enter trip length (days):</label>
           <input type="number" id="tripLength" v-model.number="tripLength" required min="1" class="input-field">
         </div>
-        
+
         <button type="submit">Generate Itinerary</button><br><br>
       </form>
       <div id="itinerary" v-if="itinerary">
-        <div v-html="formattedItinerary" class="itinerary"></div>
+        <pre class="itinerary-text">{{ formattedItinerary }}</pre>
         <div class="button-container">
           <br><button @click="generateDifferentItinerary">Generate a Different Itinerary</button>
           <button @click="saveItinerary">Save Itinerary</button>
@@ -40,12 +40,16 @@ export default {
       destination: '',
       tripLength: 1,
       itinerary: '',
-      generatingNewItinerary: false
+      generatingNewItinerary: false,
+      reformattedItinerary : ''
     }
   },
   computed: {
     formattedItinerary() {
-      return this.itinerary.result.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
+      return this.itinerary.result;
+    },
+    tripSelected() {
+      return this.$store.getters.isTripSelected;
     }
   },
   methods: {
@@ -108,14 +112,25 @@ export default {
       this.handleSubmit(); // handleSubmit to handle generating a different itinerary
     },
     saveItinerary() {
-      // event to pass the itinerary data to the parent component
-      this.$emit('save-itinerary', this.itinerary);
+      console.log('Save Itinerary clicked')
+      if (this.tripSelected) {
+      this.$store.commit('setOrUpdateItineraries',this.itinerary.result);
+      this.$store.dispatch('saveTripToDB');
+    }
     }
   }
 }
 </script>
 
 <style scoped>
+.itinerary-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  overflow: auto;
+  max-width: 100%;
+}
 .container {
   text-align: left;
 }
