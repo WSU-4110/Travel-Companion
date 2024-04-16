@@ -40,12 +40,16 @@ export default {
       destination: '',
       tripLength: 1,
       itinerary: '',
-      generatingNewItinerary: false
+      generatingNewItinerary: false,
+      reformattedItinerary : ''
     }
   },
   computed: {
     formattedItinerary() {
       return this.itinerary.result.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
+    },
+    tripSelected() {
+      return this.$store.getters.isTripSelected;
     }
   },
   methods: {
@@ -108,8 +112,11 @@ export default {
       this.handleSubmit(); // handleSubmit to handle generating a different itinerary
     },
     saveItinerary() {
-      // event to pass the itinerary data to the parent component
-      this.$emit('save-itinerary', this.itinerary);
+      console.log('Save Itinerary clicked')
+      if (this.tripSelected) {
+      this.$store.commit('setOrUpdateItineraries',this.itinerary.result.replace(/\n/g, '<br>'));
+      this.$store.dispatch('saveTripToDB');
+    }
     }
   }
 }
