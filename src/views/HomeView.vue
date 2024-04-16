@@ -15,7 +15,7 @@
           <TripOverview
             title="Locations"
             subtitle="Previously saved locations"
-            subheader="Showing five most recently saved locations:"
+            subheader="Showing three most recently saved locations:"
             :bodyContent="recentLocations"
             route="/userlocation"/>
         </div>
@@ -73,7 +73,7 @@ export default {
 
       return this.$store.getters.getSavedLocations
         .split('---------------------------------------------')
-        .slice(-3)
+        .slice(-4)
         .join('---------------------------------------------')
         .replace(/^\n/, '');
     },
