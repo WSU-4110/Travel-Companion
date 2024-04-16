@@ -73,6 +73,9 @@ const store = createStore({
     getSavedItineraries(state) {
       return state.currentTrip?.savedItineraries ? state.currentTrip.savedItineraries : null;
     },
+    getSavedCity(state){
+      return state.currentTrip?.savedCity ? state.currentTrip.savedCity : null;
+    },
     isTripSelected(state) {
       return state.currentTrip !== null;
     }
@@ -118,7 +121,10 @@ const store = createStore({
     },
     setOrUpdateItineraries(state, itineraries) {
       state.currentTrip.savedItineraries = itineraries;
-    }
+    },
+    setOrUpdateCity(state, city) {
+      state.currentTrip.savedCity = city;
+    },
   },
   actions: {
     async refreshAllTrips(context) {

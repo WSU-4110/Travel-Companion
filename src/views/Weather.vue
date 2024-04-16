@@ -35,16 +35,18 @@
                 <p class="location-info"><b>Cloudiness:</b> {{ clouds_percent }}%</p> <!-- Display cloud coverage -->
                 <p></p>
                 <p>Weather provided by OpenWeather</p>
+                
             </div>
             <div class="weather-info" v-if="show_error_message">
                 <p>No weather data found for {{ city }}</p> <!-- Error Handling -->
             </div>
-
             <!-- MapView component to display the map -->
             <div class="map-container">
                 <MapView ref="mapView" />
             </div>
+            
         </div>
+        <button @click="updateMap" type="button" class="btn btn-primary">Load Saved City</button>
     </div>
 </template>
 
@@ -99,6 +101,7 @@
                     longitude: 0,
                     spinner: false,
                     show_error_message: false, //The error handling should only show if invalid input is provided
+                    address: ''
                 };
             },
 
@@ -113,6 +116,11 @@
                     const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
                     const index = Math.round(degrees / 45) % 8;
                     return directions[index];
+                },
+                updateMap() {
+                this.$refs.mapView.updateMap(this.$store.getters.getSavedCity);
+                this.city = this.$store.getters.getSavedCity;
+                this.getWeather();
                 },
 
 
