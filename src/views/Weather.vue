@@ -4,10 +4,17 @@
         <p class="location-info">• City's name, comma, 2-letter country code (ISO3166) (e.g. New York City, US)</p>
         <p class="location-info">• ZIP or postal code</p>
         <form @submit.prevent="getWeather">
-            <input v-model.trim="city" placeholder="Enter city" /> <!-- Note: OpenWeatherMap API expects a specific format for cities, for example, 'Detroit' or 'Detroit, US' for Detroit -->
-            <button type="submit">Get Weather</button>
+          <div class="input-group mb-3 w-25">
+            <input type="text" class="form-control" placeholder="Enter city" v-model.trim="city" />
+            <button
+                class="btn btn-outline-secondary"
+                type="submit">
+                <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Get Weather
+            </button>
+          </div>
         </form>
-        <div v-if="result.temp">
+        <div class="w-25" style="padding: 1rem; border-radius: 12px; background: #ffffff;" v-if="result.temp">
             <!-- Weather Display -->
             <img v-if="weather_icon" :src="`https://openweathermap.org/img/wn/${weather_icon}@2x.png`" alt="Weather Icon" /> <!-- Display weather icon -->
             <p class="location-info"><b>Coordinates:</b> {{ latitude }}, {{ longitude }}</p>
@@ -28,7 +35,7 @@
         </div>
     </div>
     <!-- MapView component to display the map -->
-    <MapView ref="mapView" />
+    <MapView style="margin-top: 1rem;;" ref="mapView" />
 </template>
 
 <style>
@@ -59,6 +66,7 @@
                     clouds_percent: 0,
                     latitude: 0,
                     longitude: 0,
+                    spinner: false
                 };
             },
             methods:
@@ -74,6 +82,7 @@
                 },
 
                 async getWeather() {
+                    this.spinner = true;
                     if (!this.city) return;
                     try {
                         const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=${this.$store.getters.getWeatherApiKey}`); //Calling the API
@@ -100,6 +109,7 @@
                         this.$store.commit('setAlertStatus', 'alert-danger');
                         this.$store.commit('setAlertMessage', `Error fetching weather data: ${error}`);
                     }
+                    this.spinner = false;
                 },
 
             },

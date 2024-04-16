@@ -14,7 +14,10 @@
           <input type="number" id="tripLength" v-model.number="tripLength" required min="1" class="input-field form-control">
         </div>
 
-        <button class="btn btn-primary"type="submit">Generate Itinerary</button><br><br>
+        <button class="btn btn-primary"type="submit">
+          <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Generate Itinerary
+        </button><br><br>
       </form>
       <div id="itinerary" v-if="formattedItinerary">
         <pre class="itinerary-text">{{ formattedItinerary }}</pre>
@@ -45,7 +48,9 @@ export default {
       destination: '',
       tripLength: 1,
       itinerary: '',
-      generatingNewItinerary: false
+      generatingNewItinerary: false,
+      spinner: false,
+      itinerary: null
     }
   },
   computed: {
@@ -58,6 +63,7 @@ export default {
   },
   methods: {
     async suggestItinerary(destination, tripLength) {
+      this.spinner = true;
       try {
         const response = await axios.request({
           method: 'POST',
@@ -82,9 +88,11 @@ export default {
             max_tokens: 256
           }
         });
+        this.spinner = false;
         return response.data;
       } catch (error) {
         console.error('Error:', error);
+        this.spinner = false;
         throw new Error('Sorry, something went wrong. Please try again later.');
       }
     },
