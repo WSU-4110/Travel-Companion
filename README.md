@@ -5,7 +5,6 @@ A travel companion providing several tools designed to make traveling anywhere f
 
 ### Translator
 Travel-Companion features an on board translator utilizing DeepL's Translation API providing Accurate Text-to-Text translation for 20+ Languages.
--Future implementation will include a speech to text inscriber as well as a language detection.
 
 ### Itenerary Generator
 Our Itenereary generator will be able to take a provided location (City,Country) and utilize AI to generate a Itenerary at a specified length for 
@@ -20,12 +19,10 @@ with any particular trip, future, past, or present. Access all your trip informa
 
 ### Maps Feature
 Travel-Companion utilizes Google Maps API to provide accurate location data to the user at the press of a button.
--Future implementation will include location saving, Point of Interest labels, and direction generation.
 
 ### Weather Forecasting
 Travel-Compaion utilizes OpenWeatherMap's API to generate a weather forecast for a specified location, Providing all information typically seen in a standard
 weather forecast. 
--Future implementation will include a 7 day forecast
 
 # Development
 ## Development Instructions
