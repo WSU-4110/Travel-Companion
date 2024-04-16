@@ -15,6 +15,7 @@
                     Get Weather
                 </button>
               </div>
+              <button @click="updateMap2" type="button" class="btn btn-primary">Load Saved City</button>
 </form>
         </div>
 
@@ -46,7 +47,6 @@
             </div>
             
         </div>
-        <button @click="updateMap" type="button" class="btn btn-primary">Load Saved City</button>
     </div>
 </template>
 
@@ -101,7 +101,6 @@
                     longitude: 0,
                     spinner: false,
                     show_error_message: false, //The error handling should only show if invalid input is provided
-                    address: ''
                 };
             },
 
@@ -117,19 +116,19 @@
                     const index = Math.round(degrees / 45) % 8;
                     return directions[index];
                 },
-                updateMap() {
-                this.$refs.mapView.updateMap(this.$store.getters.getSavedCity);
+                updateMap2() {
                 this.city = this.$store.getters.getSavedCity;
                 this.getWeather();
                 },
-
-
+                updateMap(city) {
+                this.$refs.mapView.updateMap(city);
+                },
                 async getWeather()
                 {
                     this.spinner = true;
                     if (!this.city) return;
                     try {
-
+                        this.updateMap(this.city);
                         const res = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=${this.$store.getters.getWeatherApiKey}`); //Calling the API
                         const data = await res.json();
                         console.log(data.weather[0].icon); // Log the icon code received from the API response
