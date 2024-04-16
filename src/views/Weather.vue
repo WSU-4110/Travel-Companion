@@ -6,15 +6,22 @@
             <p class="location-info">• City's name, comma, 2-letter country code (ISO3166) (e.g. New York City, US)</p>
             <p class="location-info">• ZIP or postal code</p>
             <form @submit.prevent="getWeather">
-                <input v-model.trim="city" placeholder="Enter city" />
-                <button type="submit">Get Weather</button>
-            </form>
+              <div class="input-group mb-3 w-25">
+                <input type="text" class="form-control" placeholder="Enter city" v-model.trim="city" />
+                <button
+                    class="btn btn-outline-secondary"
+                    type="submit">
+                    <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Get Weather
+                </button>
+              </div>
+</form>
         </div>
 
         <!-- Weather info and map -->
         <div class="weather-container">
             <!-- Weather Display -->
-            <div class="weather-info" v-if="result.temp">
+            <div class="weather-info" v-if="result.temp && !show_error_message">
                 <!-- Weather Display -->
                 <img v-if="weather_icon" :src="`https://openweathermap.org/img/wn/${weather_icon}@2x.png`" alt="Weather Icon" /> <!-- Display weather icon -->
                 <p class="location-info"><b>Coordinates:</b> {{ latitude }}, {{ longitude }}</p>
@@ -29,7 +36,7 @@
                 <p></p>
                 <p>Weather provided by OpenWeather</p>
             </div>
-            <div v-if="show_error_message">
+            <div class="weather-info" v-if="show_error_message">
                 <p>No weather data found for {{ city }}</p> <!-- Error Handling -->
             </div>
 
@@ -42,21 +49,25 @@
 </template>
 
 <style>
-    .instructions 
+    .instructions
     {
         margin-bottom: 20px; /**/
     }
 
-    .weather-container 
+    .weather-container
     {
         display: flex; /* Allows for the map to appear to the right of the weather display*/
     }
 
     .weather-info {
         flex: 1; /* Affects width */
+        padding: 1rem;
+        border-radius: 12px;
+        background: #ffffff;
+        margin-right: 1rem;
     }
 
-    .map-container 
+    .map-container
     {
         flex: 2; /* Affects width */
         min-height: 479px; /* Affects height */
@@ -86,6 +97,7 @@
                     clouds_percent: 0,
                     latitude: 0,
                     longitude: 0,
+                    spinner: false,
                     show_error_message: false, //The error handling should only show if invalid input is provided
                 };
             },
@@ -103,8 +115,10 @@
                     return directions[index];
                 },
 
+
                 async getWeather()
                 {
+                    this.spinner = true;
                     if (!this.city) return;
                     try {
 
@@ -128,7 +142,7 @@
                         }
 
                         else //Error Handling
-                        { 
+                        {
                             this.show_error_message = true; //Raises error message flag when invalid input is inputted
                             this.$store.commit('setAlertStatus', 'alert-warning');
                             this.$store.commit('setAlertMessage', `No weather data found for: ${this.city}`);
@@ -136,11 +150,12 @@
                     }
 
                     catch (error) //Error Handling
-                    { 
+                    {
                         this.show_error_message = true; //Raises error message flag when invalid input is inputted
                         this.$store.commit('setAlertStatus', 'alert-danger');
                         this.$store.commit('setAlertMessage', `Error fetching weather data: ${error}`);
                     }
+                    this.spinner = false;
                 },
 
             },

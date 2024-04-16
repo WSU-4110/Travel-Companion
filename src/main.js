@@ -71,7 +71,7 @@ const store = createStore({
       return state.currentTrip.savedLocations ? state.currentTrip.savedLocations : null;
     },
     getSavedItineraries(state) {
-      return state.currentTrip.savedItineraries ? state.currentTrip.savedItineraries : null;
+      return state.currentTrip?.savedItineraries ? state.currentTrip.savedItineraries : null;
     },
     isTripSelected(state) {
       return state.currentTrip !== null;

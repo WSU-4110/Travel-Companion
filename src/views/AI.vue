@@ -4,27 +4,33 @@
     <div class="container">
       <p class="prompt">Enter your destination and trip length below to get a personalized itinerary for your trip:</p>
       <form @submit.prevent="handleSubmit" class="form">
-        <div class="form-group">
+        <div class="form-group w-25">
           <label for="destination" class="input-label">Enter destination:</label>
-          <input type="text" id="destination" v-model="destination" required class="input-field">
+          <input type="text" id="destination" v-model="destination" required class="input-field form-control">
         </div>
 
-        <div class="form-group">
+        <div class="form-group w-25">
           <label for="tripLength" class="input-label">Enter trip length (days):</label>
-          <input type="number" id="tripLength" v-model.number="tripLength" required min="1" class="input-field">
+          <input type="number" id="tripLength" v-model.number="tripLength" required min="1" class="input-field form-control">
         </div>
-        
-        <button type="submit">Generate Itinerary</button><br><br>
+
+        <button class="btn btn-primary"type="submit">
+          <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Generate Itinerary
+        </button><br><br>
       </form>
-      <div id="itinerary" v-if="itinerary">
-        <div v-html="formattedItinerary" class="itinerary"></div>
+      <div id="itinerary" v-if="formattedItinerary">
+        <pre class="itinerary-text">{{ formattedItinerary }}</pre>
         <div class="button-container">
-          <br><button @click="generateDifferentItinerary">Generate a Different Itinerary</button>
-          <button @click="saveItinerary">Save Itinerary</button>
+          <ConfirmDelete
+            targetType="Itinerary"
+            :deleteCallback="deleteItinerary"
+            :genericDelete="true"
+            :disabled="!tripSelected || !formattedItinerary"/>
         </div>
       </div>
       <div v-else>
-        <p>No itinerary available yet. Please enter a destination and trip length.</p>
+        <pre class="itinerary-text">No itinerary available yet. Please enter a destination and trip length.</pre>
       </div>
     </div>
   </div>
@@ -34,19 +40,22 @@
 <script>
 import store from '@/main.js'
 import axios from 'axios'
+import ConfirmDelete from '@/components/ConfirmDelete.vue'
 export default {
+  components: {ConfirmDelete},
   data() {
     return {
       destination: '',
       tripLength: 1,
       itinerary: '',
       generatingNewItinerary: false,
-      reformattedItinerary : ''
+      spinner: false,
+      itinerary: null
     }
   },
   computed: {
     formattedItinerary() {
-      return this.itinerary.result.replace(/\n/g, '<br>'); // Convert newlines to HTML line breaks
+      return this.$store.getters.getSavedItineraries;
     },
     tripSelected() {
       return this.$store.getters.isTripSelected;
@@ -54,6 +63,7 @@ export default {
   },
   methods: {
     async suggestItinerary(destination, tripLength) {
+      this.spinner = true;
       try {
         const response = await axios.request({
           method: 'POST',
@@ -78,9 +88,11 @@ export default {
             max_tokens: 256
           }
         });
+        this.spinner = false;
         return response.data;
       } catch (error) {
         console.error('Error:', error);
+        this.spinner = false;
         throw new Error('Sorry, something went wrong. Please try again later.');
       }
     },
@@ -103,26 +115,44 @@ export default {
       } catch (error) {
         console.error(error);
       }
+
+      this.saveItinerary();
     },
     displayItinerary(itinerary) {
       this.itinerary = itinerary;
       this.generatingNewItinerary = false; // reset flag for generating new itinerary
     },
-    generateDifferentItinerary() {
-      this.handleSubmit(); // handleSubmit to handle generating a different itinerary
-    },
     saveItinerary() {
       console.log('Save Itinerary clicked')
       if (this.tripSelected) {
-      this.$store.commit('setOrUpdateItineraries',this.itinerary.result.replace(/\n/g, '<br>'));
-      this.$store.dispatch('saveTripToDB');
-    }
+        this.$store.commit('setOrUpdateItineraries',this.itinerary.result);
+        this.$store.dispatch('saveTripToDB');
+      }
+    },
+    deleteItinerary() {
+      if (this.tripSelected) {
+        this.itinerary - null;
+        this.$store.commit('setOrUpdateItineraries', null);
+        this.$store.dispatch('saveTripToDB');
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.itinerary-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  overflow: auto;
+  max-width: 100%;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 12px;
+
+}
 .container {
   text-align: left;
 }
