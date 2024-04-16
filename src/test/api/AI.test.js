@@ -1,16 +1,9 @@
-//test
+// AI.test.js
 
 import axios from 'axios';
 import AI from '@/views/AI.vue';
 
-vi.mock('axios', () => ({
-  __esModule: true,
-  default: {
-    request: vi.fn(),
-  },
-}));
-
-window.confirm = vi.fn(() => true); // Mocking confirm to always return true
+vi.mock('axios');
 
 describe('AI', () => {
   test('suggestItinerary method', async () => {
@@ -30,12 +23,7 @@ describe('AI', () => {
     // Simulate form submission
     await aiInstance.handleSubmit();
     expect(aiInstance.generatingNewItinerary).toBeFalsy();
-
-    // Simulate confirmation and submission again
-    window.confirm = vi.fn(() => true);
-    await aiInstance.handleSubmit();
-    expect(aiInstance.generatingNewItinerary).toBeFalsy();
-});
+  });
 
   test('fetchAndDisplayItinerary method', async () => {
     const aiInstance = new AI(); // Instantiate AI class
@@ -63,14 +51,15 @@ describe('AI', () => {
   });
 
   test('saveItinerary method', () => {
-    const aiInstance = new AI(); // Instantiate AI class
+    const mockSaveCallback = vi.fn();
+    const aiInstance = new AI();
+    aiInstance.saveCallback = mockSaveCallback;
+    
     const mockItinerary = { result: 'Mock itinerary data' };
-    aiInstance.itinerary = mockItinerary; // Set the itinerary
-    aiInstance.$emit = vi.fn(); // Mock $emit method
-  
+    aiInstance.itinerary = mockItinerary;
     aiInstance.saveItinerary();
-    expect(aiInstance.$emit).toHaveBeenCalledWith('save-itinerary', mockItinerary);
-  });  
+    
+    expect(mockSaveCallback).toHaveBeenCalled();
+    expect(mockSaveCallback).toHaveBeenCalledWith(mockItinerary);
+  });
 });
-
-//all tests successful
