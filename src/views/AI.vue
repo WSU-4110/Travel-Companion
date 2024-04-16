@@ -90,27 +90,31 @@ export default {
         this.generatingNewItinerary = true;
         await this.fetchAndDisplayItinerary();
       }
-    },
-    async fetchAndDisplayItinerary() {
-      try {
-        this.itinerary = null; // Reset itinerary
-        const itinerary = await this.suggestItinerary(this.destination, this.tripLength);
-        this.displayItinerary(itinerary);
-      } catch (error) {
-        console.error(error);
-      }
-    },
-    displayItinerary(itinerary) {
-      this.itinerary = itinerary;
-      this.generatingNewItinerary = false; // reset flag for generating new itinerary
-    },
-    generateDifferentItinerary() {
-      this.handleSubmit(); // handleSubmit to handle generating a different itinerary
-    },
-    saveItinerary() {
-      // event to pass the itinerary data to the parent component
-      this.$emit('save-itinerary', this.itinerary);
     }
+  },
+
+  async fetchAndDisplayItinerary() {
+    try {
+      this.itinerary = null; // Reset itinerary
+      const itinerary = await this.suggestItinerary(this.destination, this.tripLength);
+      this.displayItinerary(itinerary);
+    } catch (error) {
+      console.error(error);
+    }
+  },
+
+  displayItinerary(itinerary) {
+    this.itinerary = itinerary;
+    this.generatingNewItinerary = false; // reset flag for generating new itinerary
+  },
+
+  generateDifferentItinerary() {
+    this.handleSubmit(); // handleSubmit to handle generating a different itinerary
+  },
+
+  saveItinerary() {
+    // event to pass the itinerary data to the parent component
+    this.$emit('save-itinerary', this.itinerary);
   }
 }
 </script>
