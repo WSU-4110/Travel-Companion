@@ -8,7 +8,7 @@
         <div class="card mb-4">
                 <div class="card-body">
                 <h2 class="card-title text-center">About Us</h2>
-                <p class="card-text lead">We are a small team of students currently attending Wayne State University's School of Engineering. All of us are working towards Computer Science degrees. Utilizing our individual skillsets, we set out to design a website useful to a wide range of travelers.</p>
+                <p class="card-text lead">We are a small team of students currently attending Wayne State University's School of Engineering. All of us are working towards Computer Science and Computer Technology degrees. Utilizing our individual skillsets, we set out to design a website useful to a wide range of travelers.</p>
                 </div>
               </div>
             </div>
