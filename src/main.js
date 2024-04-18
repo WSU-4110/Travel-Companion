@@ -9,9 +9,14 @@ import App from './App.vue'
 import router from './router'
 import DynamoAdapter from '@/api/databaseManager'
 import UserVerificationAdapter from '@/api/userVerification'
+import VuexPersistence from 'vuex-persist'
 
 const dynamoAdapter = new DynamoAdapter();
 const cognitoAdapter = new UserVerificationAdapter();
+
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+});
 
 const store = createStore({
   state () {
@@ -58,6 +63,21 @@ const store = createStore({
     },
     getCurrentTrip(state) {
       return state.currentTrip;
+    },
+    getSavedTranslations(state) {
+      return state.currentTrip.savedTranslations ? state.currentTrip.savedTranslations : null;
+    },
+    getSavedLocations(state) {
+      return state.currentTrip.savedLocations ? state.currentTrip.savedLocations : null;
+    },
+    getSavedItineraries(state) {
+      return state.currentTrip?.savedItineraries ? state.currentTrip.savedItineraries : null;
+    },
+    getSavedCity(state){
+      return state.currentTrip?.savedCity ? state.currentTrip.savedCity : null;
+    },
+    isTripSelected(state) {
+      return state.currentTrip !== null;
     }
   },
   mutations: {
@@ -92,11 +112,26 @@ const store = createStore({
     },
     setOrUpdateCurrentTrip(state, trip) {
       state.currentTrip = trip;
-    }
+    },
+    setOrUpdateTranslations(state, translations) {
+      state.currentTrip.savedTranslations = translations;
+    },
+    setOrUpdateLocations(state, locations) {
+      state.currentTrip.savedLocations = locations;
+    },
+    setOrUpdateItineraries(state, itineraries) {
+      state.currentTrip.savedItineraries = itineraries;
+    },
+    setOrUpdateCity(state, city) {
+      state.currentTrip.savedCity = city;
+    },
   },
   actions: {
     async refreshAllTrips(context) {
       context.state.allTrips = await dynamoAdapter.getAllTrips();
+    },
+    saveTripToDB(context) {
+      dynamoAdapter.updateTrip(context.state.currentTrip);
     },
     resetStore(context) {
       context.state.allTrips = null;
@@ -104,7 +139,8 @@ const store = createStore({
       context.state.username = null;
     }
   },
-  modules: {}
+  modules: {},
+  plugins: [vuexLocal.plugin]
 });
 
 const app = createApp(App);
