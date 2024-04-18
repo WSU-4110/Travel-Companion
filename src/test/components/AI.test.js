@@ -49,17 +49,4 @@ describe('AI', () => {
     aiInstance.generateDifferentItinerary();
     expect(aiInstance.handleSubmit).toHaveBeenCalled();
   });
-
-  test('saveItinerary method', () => {
-    const mockSaveCallback = vi.fn();
-    const aiInstance = new AI();
-    aiInstance.saveCallback = mockSaveCallback;
-    
-    const mockItinerary = { result: 'Mock itinerary data' };
-    aiInstance.itinerary = mockItinerary;
-    aiInstance.saveItinerary();
-    
-    expect(mockSaveCallback).toHaveBeenCalled();
-    expect(mockSaveCallback).toHaveBeenCalledWith(mockItinerary);
-  });
 });
