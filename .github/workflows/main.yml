@@ -3,9 +3,9 @@ run-name: ${{ github.actor }} is running a deployment
 
 on:
   push:
-    branches: [ development, main ]
+    branches: [ development, main, unit-test ]
   pull_request:
-    branches: [ development, main ]
+    branches: [ development, main, unit-test ]
 
 jobs:
   build:
