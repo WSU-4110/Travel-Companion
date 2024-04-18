@@ -36,7 +36,7 @@
                 <p class="location-info"><b>Cloudiness:</b> {{ clouds_percent }}%</p> <!-- Display cloud coverage -->
                 <p></p>
                 <p>Weather provided by OpenWeather</p>
-                
+
             </div>
             <div class="weather-info" v-if="show_error_message">
                 <p>No weather data found for {{ city }}</p> <!-- Error Handling -->
@@ -45,7 +45,7 @@
             <div class="map-container">
                 <MapView ref="mapView" />
             </div>
-            
+
         </div>
     </div>
 </template>
