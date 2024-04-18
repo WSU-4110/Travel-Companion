@@ -25,7 +25,7 @@ describe('TranslatorView', () => {
     wrapper.setData({ translatedText: "Hola" });
   });
 
-  it('populates languages when mounted', async () => {
+  test('populates languages when mounted', async () => {
     // Mock languages data
     const mockLanguages = [
       { code: 'en', name: 'English' },
@@ -39,7 +39,7 @@ describe('TranslatorView', () => {
     expect(wrapper.vm.languages).toEqual(mockLanguages);
   });
 
-  it('translates text correctly', async () => {
+  test('translates text correctly', async () => {
     const mockTranslation = 'Hola'; // Mock translation
     // vi.spyOn(mockAxios, 'request').mockResolvedValueOnce({ data: { translations: { translatedText: mockTranslation } } });
     // mockAxios.request.mockResolvedValueOnce({ data: { translations: { translatedText: mockTranslation } } });
@@ -50,7 +50,7 @@ describe('TranslatorView', () => {
     expect(wrapper.vm.translatedText).toEqual(mockTranslation);
   });
 
-  it('correctly saves translation', () => {
+  test('correctly saves translation', () => {
     // Define mock languages
     const mockLanguages = [
       { code: 'en', name: 'English' },
