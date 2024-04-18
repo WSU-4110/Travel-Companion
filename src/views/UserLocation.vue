@@ -4,13 +4,17 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <!-- Form for entering address -->
-                <form @submit.prevent="updateMap(address); saveLocation(address)" class="mt-4">
+                <form @submit.prevent="updateMap(address)" class="mt-4">
                     <div class="input-group mb-3">
                         <!-- Input field for address -->
                         <input type="text" class="form-control" placeholder="Enter an address" v-model="address" />
                         <!-- Locator button to get current location -->
-                        <button @click="LocatorButtonPressed" class="btn btn-outline-secondary" type="button">
-                            Get Location
+                        <button
+                          @click="LocatorButtonPressed"
+                          class="btn btn-outline-secondary"
+                          type="button">
+                          <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                          Get My Location
                         </button>
                     </div>
                     <!-- Search button to search for entered address -->
@@ -18,9 +22,12 @@
                 </form>
                 <!-- MapView component to display the map -->
                 <MapView ref="mapView" />
-                <!-- Button to save location to the current trip -->
-                <button @click="saveLocationToTrip" class="btn btn-success mt-3">Save Location to Current Trip</button>
-            </div>
+                <ConfirmDelete
+                  targetType="Locations"
+                  :deleteCallback="clearLocations"
+                  :genericDelete="true"
+                  :disabled="!tripSelected || !savedLocations"
+                />            </div>
         </div>
         <!-- Display box for saved locations -->
         <div class="row justify-content-center mt-4">
@@ -37,10 +44,12 @@
     import axios from 'axios'
     // Import MapView component
     import MapView from '@/components/MapView.vue'
+    import ConfirmDelete from '@/components/ConfirmDelete.vue'
 
     export default {
         components: {
-            MapView
+            MapView,
+            ConfirmDelete
         },
         data() {
             return {
@@ -52,12 +61,22 @@
                 // Loading spinner flag
                 spinner: false,
                 // Variable to store saved locations
-                savedLocations: "" // Initialize savedLocations variable
+                savedCity: ''
             }
         },
+        computed:{
+        savedLocations(){
+            if (!this.$store.getters.getCurrentTrip) {
+            return null;
+            }
+
+            return this.$store.getters.getSavedLocations ? this.$store.getters.getSavedLocations : '';
+        },
+        tripSelected() {
+            return this.$store.getters.isTripSelected;
+    }
+        },
         methods: {
-
-
         async fetchLocation() {
             try {
                 // Check if geolocation is supported
@@ -115,13 +134,11 @@
                         error => {
                             this.$store.commit('setAlertStatus', 'alert-danger');
                             this.$store.commit('setAlertMessage', error.message);
-                            this.spinner = false;
                         }
                     );
                 } else {
                     this.$store.commit('setAlertStatus', 'alert-danger');
                     this.$store.commit('setAlertMessage', 'Your browser does not support geolocation API');
-                    this.spinner = false;
                 }
             },
             // Method to get address from coordinates
@@ -129,6 +146,7 @@
                 try {
                     // Make API request to geocode coordinates
                     const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=${this.$store.getters.getLocationApiKey}`);
+                    this.savedCity = response.data.results[5].formatted_address;
                     if (response.data.error_message) {
                         console.log(response.data.error_message);
                         this.$store.commit('setAlertStatus', 'alert-danger');
@@ -136,53 +154,54 @@
                     } else {
                         // Set address to formatted address from API response
                         this.address = response.data.results[0].formatted_address;
+                        this.updateMap(this.address);
                     }
+                    this.spinner = false;
                 } catch (error) {
                     console.log(error.message);
                     this.$store.commit('setAlertStatus', 'alert-danger');
                     this.$store.commit('setAlertMessage', 'Error: Failed to fetch address. Please try again later');
+                    this.spinner = false;
                 }
             },
             // Method to update map with provided address
             updateMap(address) {
                 this.$refs.mapView.updateMap(address);
+                this.saveLocation(address);
             },
             // Method to save the location
             saveLocation() {
-                if (this.latitude !== null && this.longitude !== null) {
-                    this.savedLocations += `Address: ${this.address}\n`;
-                    this.savedLocations += `Latitude: ${this.latitude} \nLongitude: ${this.longitude}\n`;
-                    this.savedLocations += '---------------------------------------------\n';
-
-                    // Emit an event to indicate that a location has been saved
-                    this.$root.$emit('locationSaved', {
+                let newSavedLocations = this.savedLocations;
+                if (this.address) {
+                // Find the language names corresponding to sourceLanguage and targetLanguage codes
+                newSavedLocations += `Address: ${this.address}\n`;
+                if (this.latitude && this.longitude) {
+                  newSavedLocations += `Latitude: ${this.latitude} \nLongitude: ${this.longitude}\n`;
+                }
+                newSavedLocations += '---------------------------------------------\n';
+                this.savedLocationsText += newSavedLocations;
+                this.$root.$emit('locationSaved', {
                         address: this.address,
                         latitude: this.latitude,
                         longitude: this.longitude
                     });
-                } else {
-                    console.error("Latitude and longitude are not available.");
+                  }
+                  if (this.tripSelected) {
+                      this.$store.commit('setOrUpdateCity' , this.savedCity)
+                      this.$store.commit('setOrUpdateLocations',newSavedLocations);
+                      this.$store.dispatch('saveTripToDB');
+                      console.log(newSavedLocations)
+                  }
+            },
+            loadTranslations() {
+                this.savedLocationsText = this.$store.getters.getSavedLocations;
+            },
+            clearLocations() {
+                if (this.$store.getters.isTripSelected) {
+                    this.$store.commit('setOrUpdateLocations', null);
+                    this.$store.dispatch('saveTripToDB');
                 }
             },
-            // Method to save location to the current trip
-            saveLocationToTrip() {
-                // Get the current trip from TripSelector component
-                const currentTrip = this.$root.$refs.tripSelector.currentTrip;
-                if (currentTrip) {
-                    // Construct location object
-                    const location = {
-                        address: this.address,
-                        latitude: this.latitude,
-                        longitude: this.longitude
-                    };
-                    // Push location to the current trip's locations array
-                    currentTrip.locations.push(location);
-                    
-                } else {
-                    console.error("No current trip selected.");
-                    // Handle the case when no trip is selected
-                }
-            }
         }
     };
 </script>

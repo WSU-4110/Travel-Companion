@@ -4,27 +4,33 @@
     <div class="container">
       <p class="prompt">Enter your destination and trip length below to get a personalized itinerary for your trip:</p>
       <form @submit.prevent="handleSubmit" class="form">
-        <div class="form-group">
+        <div class="form-group w-25">
           <label for="destination" class="input-label">Enter destination:</label>
-          <input type="text" id="destination" v-model="destination" required class="input-field">
+          <input type="text" id="destination" v-model="destination" required class="input-field form-control">
         </div>
 
-        <div class="form-group">
+        <div class="form-group w-25">
           <label for="tripLength" class="input-label">Enter trip length (days):</label>
-          <input type="number" id="tripLength" v-model.number="tripLength" required min="1" class="input-field">
+          <input type="number" id="tripLength" v-model.number="tripLength" required min="1" class="input-field form-control">
         </div>
-        
-        <button type="submit">Generate Itinerary</button><br><br>
+
+        <button class="btn btn-primary"type="submit">
+          <span v-if="spinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Generate Itinerary
+        </button><br><br>
       </form>
-      <div id="itinerary" v-if="itinerary">
-        <div v-html="formattedItinerary" class="itinerary"></div>
+      <div id="itinerary" v-if="formattedItinerary">
+        <pre class="itinerary-text">{{ formattedItinerary }}</pre>
         <div class="button-container">
-          <br><button @click="generateDifferentItinerary">Generate a Different Itinerary</button>
-          <button @click="saveItinerary">Save Itinerary</button>
+          <ConfirmDelete
+            targetType="Itinerary"
+            :deleteCallback="deleteItinerary"
+            :genericDelete="true"
+            :disabled="!tripSelected || !formattedItinerary"/>
         </div>
       </div>
       <div v-else>
-        <p>No itinerary available yet. Please enter a destination and trip length.</p>
+        <pre class="itinerary-text">No itinerary available yet. Please enter a destination and trip length.</pre>
       </div>
     </div>
   </div>
@@ -119,6 +125,18 @@ export default class AI {
 </script>
 
 <style scoped>
+.itinerary-text {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: inherit;
+  font-size: inherit;
+  overflow: auto;
+  max-width: 100%;
+  background: #ffffff;
+  padding: 1rem;
+  border-radius: 12px;
+
+}
 .container {
   text-align: left;
 }
